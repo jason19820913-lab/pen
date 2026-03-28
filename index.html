@@ -245,7 +245,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--g50);}
 <script>
 // ★★★ 唯一需要修改的地方：填入你的 Apps Script Web App 網址 ★★★
 // 格式：https://script.google.com/macros/s/XXXXXXXXXXXXXXXX/exec
-var API_URL = 'https://script.google.com/macros/s/AKfycbx0Ecv1C_p5WkkfN44Oe8p9P4jZX01qDrNv05nx2gz8nh5iYXN9vw3E1mhlC2UyQ7k/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbwu4Wa582TsuDsgmDhoFVMcoXW3uVBRz6xIGuLsd2zKvYfnqs_vq41rr8jtSuEiGZrf/exec';
 
 var curPatient=null, balPatient=null, chartP=null, chartM=null;
 
@@ -284,7 +284,7 @@ function _hide(id){document.getElementById(id).classList.remove('show');}
 window.onload=async function(){
   setNow();
   document.getElementById('pur-date').value=new Date().toISOString().slice(0,10);
-  if(API_URL==='https://script.google.com/macros/s/AKfycbx0Ecv1C_p5WkkfN44Oe8p9P4jZX01qDrNv05nx2gz8nh5iYXN9vw3E1mhlC2UyQ7k/exec'){
+  if(API_URL==='https://script.google.com/macros/s/AKfycbwu4Wa582TsuDsgmDhoFVMcoXW3uVBRz6xIGuLsd2zKvYfnqs_vq41rr8jtSuEiGZrf/exec'){
     document.getElementById('api-txt').textContent='⚠ 請設定 API_URL';
     document.getElementById('api-dot').className='api-dot err';
     toast('請在 index.html 填入 Apps Script API 網址','warn'); return;
