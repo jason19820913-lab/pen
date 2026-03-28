@@ -141,13 +141,71 @@ tbody tr:hover td{background:var(--tl);}
     <div class="hd-dot"></div>
     <span class="hd-title">猛健樂施打管理</span>
   </div>
-  <div class="hd-st">
-    <div class="sdot spin" id="sdot"></div>
-    <span id="stxt">連線中</span>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button id="chpw-btn" onclick="openChangePw()"
+      style="display:none;border:none;background:rgba(255,255,255,.15);color:rgba(255,255,255,.85);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;">
+      🔑 修改密碼
+    </button>
+    <div class="hd-st">
+      <div class="sdot spin" id="sdot"></div>
+      <span id="stxt">連線中</span>
+    </div>
   </div>
 </header>
 
-<main>
+<!-- ══ 登入畫面 ══ -->
+<div id="login-screen" style="position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--r16);padding:36px 32px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.12);text-align:center;">
+    <div style="width:60px;height:60px;border-radius:50%;background:var(--teal);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">💉</div>
+    <h2 style="font-size:19px;font-weight:700;margin-bottom:6px;">猛健樂施打管理系統</h2>
+    <p style="font-size:13px;color:var(--ink3);margin-bottom:28px;">請選擇您的名稱並輸入密碼</p>
+
+    <div class="field" style="text-align:left;margin-bottom:14px;">
+      <label style="font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;">使用者名稱<span style="color:var(--red)">*</span></label>
+      <select id="login-user" style="margin-top:5px;font-size:15px;padding:12px 14px;">
+        <option value="">— 請選擇您的名稱 —</option>
+      </select>
+    </div>
+
+    <div class="field" style="text-align:left;margin-bottom:20px;">
+      <label style="font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;">密碼<span style="color:var(--red)">*</span></label>
+      <input id="login-pw" type="password" placeholder="請輸入密碼"
+        style="margin-top:5px;font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r8);width:100%;font-family:inherit;outline:none;"
+        onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <div id="login-err" style="display:none;background:var(--rl);border:1px solid #fecaca;border-radius:var(--r8);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:16px;text-align:left;"></div>
+
+    <button class="btn btn-t btn-full" onclick="doLogin()" style="font-size:15px;padding:13px;" id="login-btn">登入系統</button>
+    <p style="font-size:12px;color:var(--ink3);margin-top:14px;">如忘記密碼請洽系統管理員，由管理者至 Google Sheet「使用者清單」重設</p>
+  </div>
+</div>
+
+<!-- ══ 修改密碼 Modal ══ -->
+<div id="chpw-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--w);border-radius:var(--r16);padding:32px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,.2);">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:20px;">🔑 修改密碼</h3>
+    <div class="field" style="margin-bottom:12px;">
+      <label style="font-size:11.5px;font-weight:700;color:var(--ink3);">目前密碼</label>
+      <input id="pw-old" type="password" placeholder="請輸入目前密碼" style="margin-top:5px;">
+    </div>
+    <div class="field" style="margin-bottom:12px;">
+      <label style="font-size:11.5px;font-weight:700;color:var(--ink3);">新密碼（至少 4 個字元）</label>
+      <input id="pw-new" type="password" placeholder="請輸入新密碼" style="margin-top:5px;">
+    </div>
+    <div class="field" style="margin-bottom:20px;">
+      <label style="font-size:11.5px;font-weight:700;color:var(--ink3);">確認新密碼</label>
+      <input id="pw-confirm" type="password" placeholder="請再次輸入新密碼" style="margin-top:5px;">
+    </div>
+    <div id="chpw-err" style="display:none;background:var(--rl);border:1px solid #fecaca;border-radius:var(--r8);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:14px;"></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-t" style="flex:1" onclick="submitChangePw()">✓ 確認修改</button>
+      <button class="btn btn-g" style="flex:1" onclick="closeChangePw()">取消</button>
+    </div>
+  </div>
+</div>
+
+<main style="display:none" id="main-content">
 
 <!-- ══ STEP 1：選擇病人 ══ -->
 <div id="s1" class="card">
@@ -344,12 +402,17 @@ function fill(id,list,ph){
 }
 
 // ── 初始化 ──
+var CUR_USER = null;
+
 window.onload=function(){
   setNow();
   document.getElementById('purdt').value=new Date().toISOString().slice(0,10);
   get({action:'getLists'},function(d){
     var dot=document.getElementById('sdot'),txt=document.getElementById('stxt');
     if(d.error){dot.className='sdot err';txt.textContent='連線失敗';toast('連線失敗','err');return;}
+    // 填使用者下拉
+    fill('login-user', d.users, '— 請選擇您的名稱 —');
+    // 填其他選單
     ['scl','npcl','injcl'].forEach(function(id){fill(id,d.clinics,'— 選擇院區 —');});
     fill('injdr',d.doctors,'— 選擇醫師 —');
     fill('injnr',d.nurses,'— 選擇護理師 —');
@@ -357,6 +420,64 @@ window.onload=function(){
     dot.className='sdot ok';txt.textContent='已連線';
   });
 };
+
+function doLogin(){
+  var u=document.getElementById('login-user').value;
+  var pw=document.getElementById('login-pw').value;
+  var errEl=document.getElementById('login-err');
+  var btn=document.getElementById('login-btn');
+  if(!u){errEl.textContent='請選擇您的名稱';errEl.style.display='block';return;}
+  if(!pw){errEl.textContent='請輸入密碼';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  btn.textContent='驗證中…';btn.disabled=true;
+  get({action:'verifyUser',name:u,password:pw},function(r){
+    btn.textContent='登入系統';btn.disabled=false;
+    if(r.success){
+      CUR_USER=r.name;
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('main-content').style.display='block';
+      document.getElementById('stxt').textContent='已連線 · '+r.name;
+      document.getElementById('chpw-btn').style.display='block';
+    }else{
+      errEl.textContent='❌ '+(r.error||'驗證失敗');
+      errEl.style.display='block';
+      document.getElementById('login-pw').value='';
+      document.getElementById('login-pw').focus();
+    }
+  });
+};
+
+// ── 修改密碼 ──
+function openChangePw(){
+  document.getElementById('pw-old').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-confirm').value='';
+  document.getElementById('chpw-err').style.display='none';
+  document.getElementById('chpw-modal').style.display='flex';
+}
+function closeChangePw(){
+  document.getElementById('chpw-modal').style.display='none';
+}
+function submitChangePw(){
+  var oldPw=document.getElementById('pw-old').value;
+  var newPw=document.getElementById('pw-new').value;
+  var cfPw =document.getElementById('pw-confirm').value;
+  var err  =document.getElementById('chpw-err');
+  if(!oldPw){err.textContent='請輸入目前密碼';err.style.display='block';return;}
+  if(!newPw||newPw.length<4){err.textContent='新密碼至少需要 4 個字元';err.style.display='block';return;}
+  if(newPw!==cfPw){err.textContent='兩次輸入的新密碼不一致';err.style.display='block';return;}
+  err.style.display='none';
+  get({action:'changePassword',name:CUR_USER,oldPassword:oldPw,newPassword:newPw},function(r){
+    if(r.success){
+      closeChangePw();
+      toast('✅ 密碼已成功修改','ok');
+    }else{
+      err.textContent='❌ '+(r.error||'修改失敗');
+      err.style.display='block';
+      document.getElementById('pw-old').value='';
+    }
+  });
+}
 
 // ── 模式切換 ──
 function setMode(m){
@@ -401,7 +522,8 @@ function addPt(){
   if(!cl){toast('請選擇院區','warn');return;}
   get({action:'addPatient',chartNo:no,name:nm,clinic:cl,
        gender:document.getElementById('npsx').value,
-       birthDate:document.getElementById('npbd').value},
+       birthDate:document.getElementById('npbd').value,
+       createdBy:CUR_USER||''},
     function(r){
       if(r.success){
         toast('✅ 病人已新增','ok');
@@ -516,7 +638,7 @@ function submitPur(){
   var note=document.getElementById('purnote').value;
   if(!dt||!tp||!mg){toast('請填寫購買日期、針劑類型與總量','warn');return;}
   get({action:'addPurchase',chartNo:CUR.chartNo,patientClinic:CUR.clinic,
-       date:dt,injType:tp,totalMg:parseFloat(mg),note:note},
+       date:dt,injType:tp,totalMg:parseFloat(mg),note:note,createdBy:CUR_USER||''},
     function(r){
       if(r.success){
         toast('✅ 購買記錄已儲存','ok');
@@ -573,7 +695,7 @@ function submitInj(){
   get({action:'addInjection',chartNo:CUR.chartNo,patientClinic:CUR.clinic,
        clinic:v.cl,date:v.dt,time:v.tm,seq:parseInt(v.seq),
        injType:v.tp,dose:parseFloat(v.mg),
-       doctor:v.dr,nurse:v.nr,note:v.note},
+       doctor:v.dr,nurse:v.nr,note:v.note,createdBy:CUR_USER||''},
     function(r){
       if(r.success){
         toast('✅ 施打記錄已儲存','ok');
