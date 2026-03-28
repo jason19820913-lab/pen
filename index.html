@@ -427,7 +427,7 @@ function fmtRocInput(el){
 // 民國年轉西元年（輸入：072/09/13 或 72/9/13，輸出：1983-09-13）
 function rocToAd(roc){
   if(!roc) return '';
-  var parts = roc.replace(/\/g,'/').split('/');
+  var parts = roc.split('/');
   if(parts.length < 1) return '';
   var y = parseInt(parts[0])||0;
   if(y <= 0) return '';
