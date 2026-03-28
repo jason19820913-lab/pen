@@ -8,144 +8,124 @@
 <style>
 :root{
   --ink:#0f1923;--ink2:#3d4f5c;--ink3:#7a8f9e;
-  --line:#e2e8ed;--line2:#f0f4f7;--bg:#f5f7fa;--white:#fff;
-  --teal:#0d9488;--teal-lt:#f0fdfa;--teal-mid:#ccfbf1;--teal-dk:#0f766e;
-  --amber:#d97706;--amber-lt:#fffbeb;--amber-mid:#fde68a;
-  --red:#dc2626;--red-lt:#fef2f2;
-  --purple:#7c3aed;--purple-lt:#f5f3ff;--purple-mid:#ddd6fe;
+  --line:#e2e8ed;--line2:#f0f4f7;--bg:#f5f7fa;--w:#fff;
+  --teal:#0d9488;--tl:#f0fdfa;--tm:#ccfbf1;--td:#0f766e;
+  --amber:#d97706;--al:#fffbeb;--am:#fde68a;
+  --red:#dc2626;--rl:#fef2f2;
+  --purple:#7c3aed;--pl:#f5f3ff;--pm:#ddd6fe;
   --r8:8px;--r12:12px;--r16:16px;
-  --sh1:0 1px 3px rgba(0,0,0,.08);
+  --sh:0 1px 3px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;}
 
+/* Header */
 .hd{background:var(--ink);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .hd-logo{display:flex;align-items:center;gap:10px;}
 .hd-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.25);}
 .hd-title{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px;}
-.hd-status{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.6);}
+.hd-st{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.6);}
 .sdot{width:7px;height:7px;border-radius:50%;background:#475569;}
-.sdot.ok{background:#34d399;}.sdot.err{background:#f87171;}.sdot.loading{background:#94a3b8;animation:rot .8s linear infinite;}
+.sdot.ok{background:#34d399;}.sdot.err{background:#f87171;}.sdot.spin{background:#94a3b8;animation:rot .8s linear infinite;}
 @keyframes rot{to{transform:rotate(360deg)}}
 
-.nav{background:#fff;border-bottom:1px solid var(--line);display:flex;padding:0 20px;overflow-x:auto;scrollbar-width:none;}
-.nav::-webkit-scrollbar{display:none;}
-.nb{border:none;background:none;height:48px;padding:0 18px;font-size:13.5px;font-weight:500;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-family:inherit;display:flex;align-items:center;gap:6px;transition:color .15s,border-color .15s;}
-.nb.on{color:var(--teal-dk);border-color:var(--teal);}
-.nb:hover:not(.on){color:var(--ink2);background:var(--line2);}
+main{max-width:800px;margin:0 auto;padding:20px 16px 80px;}
 
-main{max-width:780px;margin:0 auto;padding:20px 16px 80px;}
-.pane{display:none;}.pane.on{display:block;}
-
-.card{background:#fff;border:1px solid var(--line);border-radius:var(--r16);padding:20px;margin-bottom:14px;box-shadow:var(--sh1);}
+/* Cards */
+.card{background:var(--w);border:1px solid var(--line);border-radius:var(--r16);padding:20px;margin-bottom:14px;box-shadow:var(--sh);}
 .card-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
 .card-title{font-size:15px;font-weight:700;}
-.cbadge{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;}
-.cbadge-t{background:var(--teal-mid);color:var(--teal-dk);}
-.cbadge-p{background:var(--purple-mid);color:var(--purple);}
+.badge{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;}
+.badge-t{background:var(--tm);color:var(--td);}
+.badge-p{background:var(--pm);color:var(--purple);}
 
-/* 模式切換按鈕 */
-.mode-switch{display:flex;gap:8px;margin-bottom:18px;}
-.mode-btn{flex:1;padding:11px;border-radius:var(--r12);border:2px solid var(--line);background:#fff;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--ink3);transition:all .15s;text-align:center;}
-.mode-btn.on{border-color:var(--teal);background:var(--teal-lt);color:var(--teal-dk);}
-.mode-btn:hover:not(.on){border-color:#c8d3db;background:var(--line2);}
+/* 模式切換 */
+.mode-sw{display:flex;gap:8px;margin-bottom:18px;}
+.mbtn{flex:1;padding:11px;border-radius:var(--r12);border:2px solid var(--line);background:var(--w);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--ink3);transition:all .15s;text-align:center;}
+.mbtn.on{border-color:var(--teal);background:var(--tl);color:var(--td);}
+.mbtn:hover:not(.on){border-color:#c8d3db;background:var(--line2);}
 
-/* 搜尋列 */
-.search-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:flex-end;}
-@media(max-width:500px){.search-grid{grid-template-columns:1fr 1fr;}.search-grid .btn{grid-column:1/-1;}}
+/* 搜尋 */
+.sg{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:flex-end;}
+@media(max-width:500px){.sg{grid-template-columns:1fr 1fr;}.sg .btn{grid-column:1/-1;}}
 
-/* 病人卡片 */
-.p-found{display:none;margin-top:12px;background:var(--teal-lt);border:1px solid var(--teal-mid);border-radius:var(--r12);padding:14px 16px;animation:fu .2s ease;}
-.p-found.on{display:flex;gap:12px;align-items:center;}
+/* 病人卡 */
+.pcard{display:none;margin-top:12px;background:var(--tl);border:1px solid var(--tm);border-radius:var(--r12);padding:14px 16px;animation:fu .2s ease;}
+.pcard.on{display:flex;gap:12px;align-items:center;}
 @keyframes fu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.p-av{width:44px;height:44px;border-radius:50%;background:var(--teal);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.p-name-txt{font-size:16px;font-weight:700;color:var(--teal-dk);}
-.p-meta{font-size:12.5px;color:var(--ink3);margin-top:2px;}
-.p-tag{display:inline-block;background:var(--teal-mid);color:var(--teal-dk);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px;}
-
-.not-found-box{display:none;margin-top:12px;background:var(--red-lt);border:1px solid #fecaca;border-radius:var(--r12);padding:13px 16px;font-size:13px;color:var(--red);animation:fu .2s ease;}
-.not-found-box.on{display:block;}
+.av{width:44px;height:44px;border-radius:50%;background:var(--teal);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pn{font-size:16px;font-weight:700;color:var(--td);}
+.pm{font-size:12.5px;color:var(--ink3);margin-top:2px;}
+.ptag{display:inline-block;background:var(--tm);color:var(--td);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-top:4px;}
+.nfbox{display:none;margin-top:12px;background:var(--rl);border:1px solid #fecaca;border-radius:var(--r12);padding:13px 16px;font-size:13px;color:var(--red);animation:fu .2s ease;}
+.nfbox.on{display:block;}
 
 /* 表單 */
 .fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
 .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 14px;}
 @media(max-width:560px){.fg2{grid-template-columns:1fr;}.fg3{grid-template-columns:1fr 1fr;}}
 @media(max-width:360px){.fg3{grid-template-columns:1fr;}}
-.span2{grid-column:1/-1;}
-
+.s2{grid-column:1/-1;}
 .field{display:flex;flex-direction:column;gap:5px;}
 .field label{font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;}
 .req{color:var(--red);margin-left:1px;}
-
-input,select,textarea{border:1.5px solid var(--line);border-radius:var(--r8);padding:10px 12px;font-size:14px;color:var(--ink);font-family:inherit;outline:none;width:100%;background:#fff;-webkit-appearance:none;transition:border-color .15s,box-shadow .15s;}
+input,select,textarea{border:1.5px solid var(--line);border-radius:var(--r8);padding:10px 12px;font-size:14px;color:var(--ink);font-family:inherit;outline:none;width:100%;background:var(--w);-webkit-appearance:none;transition:border-color .15s,box-shadow .15s;}
 input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.12);}
 select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa0a6' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:32px;}
 textarea{resize:vertical;min-height:72px;}
+.dr{display:flex;gap:8px;}
+.dr input[type=date]{flex:2;}.dr input[type=time]{flex:1.4;}
+.tbtn{flex-shrink:0;padding:10px 12px;font-size:12px;font-weight:700;background:var(--tl);color:var(--td);border:1.5px solid var(--tm);border-radius:var(--r8);cursor:pointer;font-family:inherit;white-space:nowrap;}
+.tbtn:hover{background:var(--tm);}
 
-.date-row{display:flex;gap:8px;}
-.date-row input[type=date]{flex:2;}.date-row input[type=time]{flex:1.4;}
-.btn-today{flex-shrink:0;padding:10px 12px;font-size:12px;font-weight:700;background:var(--teal-lt);color:var(--teal-dk);border:1.5px solid var(--teal-mid);border-radius:var(--r8);cursor:pointer;font-family:inherit;white-space:nowrap;}
-.btn-today:hover{background:var(--teal-mid);}
+/* 餘量顯示 */
+.rem{border:1.5px solid var(--pm);border-radius:var(--r8);padding:12px 14px;background:var(--pl);min-height:44px;display:flex;align-items:center;font-size:15px;font-weight:700;color:var(--purple);}
+.rem.warn{color:var(--amber);border-color:var(--am);background:var(--al);}
+.rem.danger{color:var(--red);border-color:#fecaca;background:var(--rl);}
+.rem.empty{color:var(--ink3);font-weight:400;font-size:13px;}
 
-.remain-box{border:1.5px solid var(--purple-mid);border-radius:var(--r8);padding:12px 14px;background:var(--purple-lt);min-height:44px;display:flex;align-items:center;font-size:15px;font-weight:700;color:var(--purple);}
-.remain-box.warn{color:var(--amber);border-color:var(--amber-mid);background:var(--amber-lt);}
-.remain-box.danger{color:var(--red);border-color:#fecaca;background:var(--red-lt);}
-.remain-box.empty{color:var(--ink3);font-weight:400;font-size:13px;}
-
+/* 區段分隔 */
 .div{border:none;border-top:1px solid var(--line2);margin:18px 0;}
-.slabel{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--ink3);text-transform:uppercase;margin-bottom:10px;}
+.slbl{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--ink3);text-transform:uppercase;margin-bottom:10px;}
 
+/* 按鈕 */
 .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:var(--r12);border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
-.btn-teal{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(13,148,136,.3);}
-.btn-teal:hover{background:var(--teal-dk);}
-.btn-teal:active{transform:scale(.98);}
-.btn-ghost{background:#fff;color:var(--ink2);border:1.5px solid var(--line);}
-.btn-ghost:hover{background:var(--line2);}
-.btn-purple{background:var(--purple);color:#fff;}
-.btn-purple:hover{background:#6d28d9;}
+.btn-t{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(13,148,136,.3);}
+.btn-t:hover{background:var(--td);}.btn-t:active{transform:scale(.98);}
+.btn-g{background:var(--w);color:var(--ink2);border:1.5px solid var(--line);}
+.btn-g:hover{background:var(--line2);}
+.btn-p{background:var(--purple);color:#fff;}.btn-p:hover{background:#6d28d9;}
 .btn-sm{padding:8px 14px;font-size:12.5px;border-radius:var(--r8);}
 .btn-full{width:100%;justify-content:center;}
 
-/* 步驟指示 */
-.step-bar{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
-.step{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink3);}
-.step.done{color:var(--teal-dk);}
-.step.active{color:var(--ink);}
-.step-num{width:22px;height:22px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
-.step.done .step-num{background:var(--teal);border-color:var(--teal);color:#fff;}
-.step-line{flex:1;height:2px;background:var(--line);}
-.step.done + .step-line{background:var(--teal-mid);}
-
-/* 餘量卡 */
-.bal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:14px;}
-.bal-card{background:var(--purple-lt);border:1.5px solid var(--purple-mid);border-radius:var(--r12);padding:14px 16px;}
-.bal-card.warn{background:var(--amber-lt);border-color:var(--amber-mid);}
-.bal-tag{font-size:10.5px;font-weight:700;letter-spacing:.5px;color:var(--purple);text-transform:uppercase;margin-bottom:4px;}
-.bal-card.warn .bal-tag{color:var(--amber);}
-.bal-type{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px;line-height:1.3;}
-.bal-rows{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px;}
+/* 購買/餘量卡片區 */
+.bal-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:0;}
+.bc{border-radius:var(--r12);padding:14px 16px;border:1.5px solid var(--pm);background:var(--pl);}
+.bc.warn{border-color:var(--am);background:var(--al);}
+.bc-tag{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--purple);text-transform:uppercase;margin-bottom:3px;}
+.bc.warn .bc-tag{color:var(--amber);}
+.bc-type{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:8px;line-height:1.3;}
+.bc-rows{display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:12.5px;}
 .bk{color:var(--ink3);}.bv{font-weight:700;}
-.bv-ok{color:var(--teal-dk);font-weight:700;}
-.bv-warn{color:var(--amber);font-weight:700;}
-.bv-danger{color:var(--red);font-weight:700;}
+.ok{color:var(--td);font-weight:700;}.warn-v{color:var(--amber);font-weight:700;}.danger-v{color:var(--red);font-weight:700;}
 
 /* 表格 */
-.tbl-scroll{overflow-x:auto;border-radius:var(--r12);border:1px solid var(--line);}
+.tscroll{overflow-x:auto;border-radius:var(--r12);border:1px solid var(--line);}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead{background:var(--line2);}
-th{padding:10px 13px;text-align:left;font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;border-bottom:1px solid var(--line);white-space:nowrap;}
-td{padding:11px 13px;border-bottom:1px solid var(--line2);vertical-align:middle;color:var(--ink2);}
+th{padding:10px 12px;text-align:left;font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;border-bottom:1px solid var(--line);white-space:nowrap;}
+td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:middle;color:var(--ink2);}
 tr:last-child td{border-bottom:none;}
-tbody tr:hover td{background:var(--teal-lt);}
-.chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;}
-.chip-t{background:var(--teal-mid);color:var(--teal-dk);}
-.chip-p{background:var(--purple-mid);color:var(--purple);}
-.chip-g{background:var(--line);color:var(--ink3);}
-.chip-k{background:var(--ink);color:#fff;}
+tbody tr:hover td{background:var(--tl);}
+.chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;}
+.ct{background:var(--tm);color:var(--td);}
+.cp{background:var(--pm);color:var(--purple);}
+.cg{background:var(--line);color:var(--ink3);}
+.ck{background:var(--ink);color:#fff;}
 
-.empty-state{display:flex;flex-direction:column;align-items:center;padding:36px 20px;color:var(--ink3);gap:8px;font-size:13.5px;}
-.loader{display:flex;align-items:center;gap:10px;padding:28px 20px;color:var(--ink3);font-size:13px;}
-.spin-ring{width:22px;height:22px;border:2.5px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0;}
+.empty{display:flex;align-items:center;justify-content:center;padding:28px;color:var(--ink3);font-size:13px;}
+.loader{display:flex;align-items:center;gap:10px;padding:24px;color:var(--ink3);font-size:13px;}
+.sp{width:20px;height:20px;border:2.5px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0;}
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;padding:12px 24px;border-radius:var(--r12);font-size:13.5px;font-weight:500;z-index:9999;opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;white-space:nowrap;max-width:92vw;box-shadow:0 4px 16px rgba(0,0,0,.25);}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -161,400 +141,401 @@ tbody tr:hover td{background:var(--teal-lt);}
     <div class="hd-dot"></div>
     <span class="hd-title">猛健樂施打管理</span>
   </div>
-  <div class="hd-status">
-    <div class="sdot loading" id="sdot"></div>
+  <div class="hd-st">
+    <div class="sdot spin" id="sdot"></div>
     <span id="stxt">連線中</span>
   </div>
 </header>
 
-<nav class="nav">
-  <button class="nb on" onclick="goTab('inj',this)">🩺 施打記錄</button>
-  <button class="nb" onclick="goTab('bal',this)">💊 針劑餘量</button>
-</nav>
-
 <main>
 
-<!-- ════ 施打記錄 ════ -->
-<div id="pane-inj" class="pane on">
+<!-- ══ STEP 1：選擇病人 ══ -->
+<div id="s1" class="card">
+  <div class="card-hd"><span class="card-title">病人資料</span></div>
 
-  <!-- 步驟指示 -->
-  <div class="step-bar" id="step-bar">
-    <div class="step active" id="step1"><div class="step-num">1</div>選擇病人</div>
-    <div class="step-line"></div>
-    <div class="step" id="step2"><div class="step-num">2</div>施打記錄</div>
+  <div class="mode-sw">
+    <button class="mbtn on" id="mb-search" onclick="setMode('search')">🔍 查詢已有病人</button>
+    <button class="mbtn" id="mb-new" onclick="setMode('new')">✚ 新增病人</button>
   </div>
 
-  <!-- STEP 1：選擇病人 -->
-  <div id="step1-card" class="card">
-    <div class="card-hd"><span class="card-title">病人資料</span></div>
-
-    <!-- 模式切換 -->
-    <div class="mode-switch">
-      <button class="mode-btn on" id="mode-search" onclick="setMode('search')">🔍 查詢已有病人</button>
-      <button class="mode-btn" id="mode-new" onclick="setMode('new')">✚ 新增病人</button>
-    </div>
-
-    <!-- 查詢模式 -->
-    <div id="search-mode">
-      <div class="search-grid">
-        <div class="field">
-          <label>病歷號<span class="req">*</span></label>
-          <input id="s-no" type="text" placeholder="輸入病歷號…" onkeydown="if(event.key==='Enter')doSearch()">
-        </div>
-        <div class="field">
-          <label>院區<span class="req">*</span></label>
-          <select id="s-cl"><option value="">— 選擇院區 —</option></select>
-        </div>
-        <button class="btn btn-ghost" style="align-self:flex-end" onclick="doSearch()">查詢</button>
-      </div>
-      <div id="p-found" class="p-found">
-        <div class="p-av" id="p-av">?</div>
-        <div>
-          <div class="p-name-txt" id="p-name">—</div>
-          <div class="p-meta" id="p-meta">—</div>
-          <div class="p-tag" id="p-tag">—</div>
-        </div>
-      </div>
-      <div id="not-found" class="not-found-box">❌ 查無此病人，請切換到「新增病人」建立資料</div>
-      <button id="btn-next-search" class="btn btn-teal btn-full" style="display:none;margin-top:14px" onclick="goToStep2()">
-        繼續 → 填寫施打記錄
-      </button>
-    </div>
-
-    <!-- 新增模式 -->
-    <div id="new-mode" style="display:none">
-      <div class="fg2">
-        <div class="field"><label>病歷號<span class="req">*</span></label><input id="np-no" type="text" placeholder="請輸入病歷號"></div>
-        <div class="field"><label>姓名<span class="req">*</span></label><input id="np-nm" type="text" placeholder="病人姓名"></div>
-        <div class="field"><label>院區<span class="req">*</span></label>
-          <select id="np-cl"><option value="">— 選擇院區 —</option></select></div>
-        <div class="field"><label>性別</label>
-          <select id="np-sx"><option value="男">男</option><option value="女">女</option><option value="其他">其他</option></select></div>
-        <div class="field span2"><label>出生日期</label><input id="np-bd" type="date"></div>
-      </div>
-      <button class="btn btn-teal btn-full" style="margin-top:14px" onclick="addPt()">
-        ✚ 新增病人並繼續施打記錄
-      </button>
-    </div>
-  </div>
-
-  <!-- STEP 2：施打表單（初始隱藏） -->
-  <div id="step2-section" style="display:none">
-
-    <!-- 病人摘要（可返回） -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <div class="p-found on" style="margin:0;flex:1;">
-        <div class="p-av" id="inj-av">?</div>
-        <div>
-          <div class="p-name-txt" id="inj-pname">—</div>
-          <div class="p-meta" id="inj-pmeta">—</div>
-          <div class="p-tag" id="inj-ptag">—</div>
-        </div>
-      </div>
-      <button class="btn btn-ghost btn-sm" style="margin-left:10px;flex-shrink:0" onclick="backToStep1()">← 換病人</button>
-    </div>
-
-    <div class="card">
-      <div class="card-hd"><span class="card-title">新增施打記錄</span></div>
-
-      <!-- 餘量快覽 -->
-      <div id="bal-preview" style="margin-bottom:4px"></div>
-
-      <div class="slabel">施打時間</div>
-      <div class="field">
-        <label>日期 / 時間<span class="req">*</span></label>
-        <div class="date-row">
-          <input id="inj-dt" type="date">
-          <input id="inj-tm" type="time">
-          <button class="btn-today" onclick="setNow()">今天</button>
-        </div>
-      </div>
-
-      <div class="div"></div>
-      <div class="slabel">施打資訊</div>
-      <div class="fg3">
-        <div class="field">
-          <label>第幾次<span class="req">*</span></label>
-          <input id="inj-seq" type="number" min="1" placeholder="1">
-        </div>
-        <div class="field">
-          <label>施打院區<span class="req">*</span></label>
-          <select id="inj-cl"><option value="">— 選擇 —</option></select>
-        </div>
-        <div class="field">
-          <label>針劑類型<span class="req">*</span></label>
-          <select id="inj-tp" onchange="calcRemain()"><option value="">— 選擇 —</option></select>
-        </div>
-        <div class="field">
-          <label>主治醫師<span class="req">*</span></label>
-          <select id="inj-dr"><option value="">— 選擇 —</option></select>
-        </div>
-        <div class="field">
-          <label>施打護理師<span class="req">*</span></label>
-          <select id="inj-nr"><option value="">— 選擇 —</option></select>
-        </div>
-        <div class="field">
-          <label>施打劑量 (mg)<span class="req">*</span></label>
-          <input id="inj-mg" type="number" min="1" step="0.1" placeholder="100" oninput="calcRemain()">
-        </div>
-        <div class="field span2">
-          <label>施打後剩餘 (mg)</label>
-          <div class="remain-box empty" id="remain-box">請先選擇針劑類型並輸入劑量</div>
-        </div>
-        <div class="field span2">
-          <label>備註</label>
-          <textarea id="inj-note" placeholder="副作用觀察、特殊狀況…"></textarea>
-        </div>
-      </div>
-
-      <div class="div"></div>
-      <button class="btn btn-teal btn-full" onclick="submitInj()">✓ 儲存施打記錄</button>
-    </div>
-
-    <!-- 歷史 -->
-    <div class="card">
-      <div class="card-hd">
-        <span class="card-title">過去施打紀錄</span>
-        <span class="cbadge cbadge-t" id="hist-ct">0 筆</span>
-      </div>
-      <div id="hist-body"><div class="loader"><div class="spin-ring"></div>載入中…</div></div>
-    </div>
-  </div>
-
-</div><!-- /pane-inj -->
-
-<!-- ════ 針劑餘量 ════ -->
-<div id="pane-bal" class="pane">
-  <div class="card">
-    <div class="card-hd"><span class="card-title">查詢針劑餘量</span></div>
-    <div class="search-grid">
+  <!-- 查詢 -->
+  <div id="m-search">
+    <div class="sg">
       <div class="field">
         <label>病歷號<span class="req">*</span></label>
-        <input id="b-no" type="text" placeholder="輸入病歷號…" onkeydown="if(event.key==='Enter')loadBal()">
+        <input id="sno" type="text" placeholder="輸入病歷號…" onkeydown="if(event.key==='Enter')doSearch()">
       </div>
       <div class="field">
         <label>院區<span class="req">*</span></label>
-        <select id="b-cl"><option value="">— 選擇院區 —</option></select>
+        <select id="scl"><option value="">— 選擇院區 —</option></select>
       </div>
-      <button class="btn btn-ghost" style="align-self:flex-end" onclick="loadBal()">查詢</button>
+      <button class="btn btn-g" style="align-self:flex-end" onclick="doSearch()">查詢</button>
     </div>
-    <div id="b-found" class="p-found"></div>
+    <div id="pfound" class="pcard">
+      <div class="av" id="pav">?</div>
+      <div><div class="pn" id="pnm">—</div><div class="pm" id="pmt">—</div><div class="ptag" id="ptg">—</div></div>
+    </div>
+    <div id="nfbox" class="nfbox">❌ 查無此病人，請切換到「新增病人」建立資料</div>
+    <button id="btn-next" class="btn btn-t btn-full" style="display:none;margin-top:14px" onclick="goStep2()">繼續 → 施打記錄 / 購買管理</button>
   </div>
 
-  <div id="bal-main" style="display:none">
-    <div class="card">
-      <div class="card-hd"><span class="card-title">目前針劑餘量</span></div>
-      <div id="bal-cards" class="bal-grid"></div>
+  <!-- 新增 -->
+  <div id="m-new" style="display:none">
+    <div class="fg2">
+      <div class="field"><label>病歷號<span class="req">*</span></label><input id="npno" type="text" placeholder="請輸入病歷號"></div>
+      <div class="field"><label>姓名<span class="req">*</span></label><input id="npnm" type="text" placeholder="病人姓名"></div>
+      <div class="field"><label>院區<span class="req">*</span></label>
+        <select id="npcl"><option value="">— 選擇院區 —</option></select></div>
+      <div class="field"><label>性別</label>
+        <select id="npsx"><option value="男">男</option><option value="女">女</option><option value="其他">其他</option></select></div>
+      <div class="field s2"><label>出生日期</label><input id="npbd" type="date"></div>
     </div>
-    <div class="card">
-      <div class="card-hd"><span class="card-title">新增購買記錄</span></div>
-      <div class="fg3">
-        <div class="field"><label>購買日期<span class="req">*</span></label><input id="pur-dt" type="date"></div>
-        <div class="field"><label>針劑類型<span class="req">*</span></label>
-          <select id="pur-tp"><option value="">— 選擇 —</option></select></div>
-        <div class="field"><label>購買總量 (mg)<span class="req">*</span></label>
-          <input id="pur-mg" type="number" min="1" step="0.1" placeholder="300"></div>
-        <div class="field span2"><label>備註（選填）</label>
-          <input id="pur-note" type="text" placeholder="處方單號等"></div>
-      </div>
-      <button class="btn btn-purple btn-sm" style="margin-top:14px" onclick="submitPur()">✚ 新增購買記錄</button>
-    </div>
-    <div class="card">
-      <div class="card-hd">
-        <span class="card-title">購買歷史</span>
-        <span class="cbadge cbadge-p" id="pur-ct">0 筆</span>
-      </div>
-      <div id="pur-body"></div>
-    </div>
+    <button class="btn btn-t btn-full" style="margin-top:14px" onclick="addPt()">✚ 新增病人並繼續</button>
   </div>
 </div>
+
+<!-- ══ STEP 2：病人摘要（固定顯示）══ -->
+<div id="s2" style="display:none">
+
+  <!-- 病人資訊列 -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px;">
+    <div class="pcard on" style="margin:0;flex:1;min-width:0;">
+      <div class="av" id="iav">?</div>
+      <div style="min-width:0;">
+        <div class="pn" id="inm">—</div>
+        <div class="pm" id="imt">—</div>
+        <div class="ptag" id="itg">—</div>
+      </div>
+    </div>
+    <button class="btn btn-g btn-sm" style="flex-shrink:0" onclick="backS1()">← 換病人</button>
+  </div>
+
+  <!-- ── 購買記錄 & 餘量 ── -->
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-title">💊 針劑餘量</span>
+      <button class="btn btn-p btn-sm" onclick="showAddPur()">✚ 新增購買</button>
+    </div>
+
+    <!-- 餘量卡片 -->
+    <div id="bal-cards" class="bal-summary"></div>
+
+    <!-- 新增購買（預設隱藏，點按鈕展開）-->
+    <div id="pur-form" style="display:none;margin-top:14px;">
+      <div class="div" style="margin-top:0"></div>
+      <div class="slbl">新增購買記錄</div>
+      <div class="fg3">
+        <div class="field"><label>購買日期<span class="req">*</span></label><input id="purdt" type="date"></div>
+        <div class="field"><label>針劑類型<span class="req">*</span></label>
+          <select id="purtp"><option value="">— 選擇 —</option></select></div>
+        <div class="field"><label>購買總量 (mg)<span class="req">*</span></label>
+          <input id="purmg" type="number" min="1" step="0.1" placeholder="300"></div>
+        <div class="field s2"><label>備註（選填）</label>
+          <input id="purnote" type="text" placeholder="處方單號等"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn btn-p btn-sm" onclick="submitPur()">✓ 儲存購買記錄</button>
+        <button class="btn btn-g btn-sm" onclick="hidePurForm()">取消</button>
+      </div>
+    </div>
+
+    <!-- 購買歷史 -->
+    <div style="margin-top:14px;">
+      <div class="card-hd" style="margin-bottom:10px;">
+        <span style="font-size:13px;font-weight:600;color:var(--ink3);">購買歷史</span>
+        <span class="badge badge-p" id="purct">0 筆</span>
+      </div>
+      <div id="purbody"></div>
+    </div>
+  </div>
+
+  <!-- ── 施打表單 ── -->
+  <div class="card">
+    <div class="card-hd"><span class="card-title">🩺 新增施打記錄</span></div>
+
+    <div class="slbl">施打時間</div>
+    <div class="field">
+      <label>日期 / 時間<span class="req">*</span></label>
+      <div class="dr">
+        <input id="injdt" type="date">
+        <input id="injtm" type="time">
+        <button class="tbtn" onclick="setNow()">今天</button>
+      </div>
+    </div>
+
+    <div class="div"></div>
+    <div class="slbl">施打資訊</div>
+    <div class="fg3">
+      <div class="field">
+        <label>第幾次<span class="req">*</span></label>
+        <input id="injseq" type="number" min="1" placeholder="1">
+      </div>
+      <div class="field">
+        <label>施打院區<span class="req">*</span></label>
+        <select id="injcl"><option value="">— 選擇 —</option></select>
+      </div>
+      <div class="field">
+        <label>針劑類型<span class="req">*</span></label>
+        <select id="injtp" onchange="calcRem()"><option value="">— 選擇 —</option></select>
+      </div>
+      <div class="field">
+        <label>主治醫師<span class="req">*</span></label>
+        <select id="injdr"><option value="">— 選擇 —</option></select>
+      </div>
+      <div class="field">
+        <label>施打護理師<span class="req">*</span></label>
+        <select id="injnr"><option value="">— 選擇 —</option></select>
+      </div>
+      <div class="field">
+        <label>施打劑量 (mg)<span class="req">*</span></label>
+        <input id="injmg" type="number" min="1" step="0.1" placeholder="100" oninput="calcRem()">
+      </div>
+      <div class="field s2">
+        <label>施打後剩餘 (mg)</label>
+        <div class="rem empty" id="rembox">請先選擇針劑類型並輸入劑量</div>
+      </div>
+      <div class="field s2">
+        <label>備註</label>
+        <textarea id="injnote" placeholder="副作用觀察、特殊狀況…"></textarea>
+      </div>
+    </div>
+
+    <div class="div"></div>
+    <button class="btn btn-t btn-full" onclick="submitInj()">✓ 儲存施打記錄</button>
+  </div>
+
+  <!-- ── 施打歷史 ── -->
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-title">📋 過去施打紀錄</span>
+      <span class="badge badge-t" id="histct">0 筆</span>
+    </div>
+    <div id="histbody"><div class="loader"><div class="sp"></div>載入中…</div></div>
+  </div>
+
+</div><!-- /s2 -->
 
 </main>
 <div id="toast" class="toast"></div>
 
 <script>
-var API = 'https://script.google.com/macros/s/AKfycbwRy8uL0el0OEJaDF_H-bPJrGfU-aAI6FmIhJ5t7R_WcWO8RgtVk58idn20WGyCE7EZ/exec';
-var CUR=null, BALP=null;
+var API='https://script.google.com/macros/s/AKfycbwRy8uL0el0OEJaDF_H-bPJrGfU-aAI6FmIhJ5t7R_WcWO8RgtVk58idn20WGyCE7EZ/exec';
+var CUR=null;
 
 function get(p,cb){
   var q=Object.keys(p).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(p[k]===null||p[k]===undefined?'':p[k]);}).join('&');
-  fetch(API+'?'+q).then(function(r){return r.json();}).then(cb).catch(function(e){toast('連線錯誤','err');console.error(e);});
+  fetch(API+'?'+q).then(function(r){return r.json();}).then(cb).catch(function(){toast('連線錯誤','err');});
 }
 function toast(m,t){
   var el=document.getElementById('toast');el.textContent=m;el.className='toast on '+(t||'');
   clearTimeout(el._t);el._t=setTimeout(function(){el.className='toast';},3500);
 }
-function goTab(n,btn){
-  document.querySelectorAll('.pane').forEach(function(e){e.classList.remove('on');});
-  document.querySelectorAll('.nb').forEach(function(e){e.classList.remove('on');});
-  document.getElementById('pane-'+n).classList.add('on');btn.classList.add('on');
-}
+function show(id){document.getElementById(id).classList.add('on');}
+function hide(id){document.getElementById(id).classList.remove('on');}
 function setNow(){
   var n=new Date();
-  document.getElementById('inj-dt').value=n.toISOString().slice(0,10);
-  document.getElementById('inj-tm').value=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);
+  document.getElementById('injdt').value=n.toISOString().slice(0,10);
+  document.getElementById('injtm').value=('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2);
 }
 function fill(id,list,ph){
   var s=document.getElementById(id);if(!s)return;
   s.innerHTML='<option value="">'+ph+'</option>';
   (list||[]).forEach(function(v){s.innerHTML+='<option value="'+v+'">'+v+'</option>';});
 }
-function show(id){document.getElementById(id).classList.add('on');}
-function hide(id){document.getElementById(id).classList.remove('on');}
 
 // ── 初始化 ──
 window.onload=function(){
   setNow();
-  document.getElementById('pur-dt').value=new Date().toISOString().slice(0,10);
+  document.getElementById('purdt').value=new Date().toISOString().slice(0,10);
   get({action:'getLists'},function(d){
     var dot=document.getElementById('sdot'),txt=document.getElementById('stxt');
     if(d.error){dot.className='sdot err';txt.textContent='連線失敗';toast('連線失敗','err');return;}
-    fill('s-cl',d.clinics,'— 選擇院區 —');
-    fill('np-cl',d.clinics,'— 選擇院區 —');
-    fill('b-cl',d.clinics,'— 選擇院區 —');
-    fill('inj-cl',d.clinics,'— 選擇院區 —');
-    fill('inj-dr',d.doctors,'— 選擇醫師 —');
-    fill('inj-nr',d.nurses,'— 選擇護理師 —');
-    fill('inj-tp',d.injTypes,'— 選擇針劑類型 —');
-    fill('pur-tp',d.injTypes,'— 選擇針劑類型 —');
+    ['scl','npcl','injcl'].forEach(function(id){fill(id,d.clinics,'— 選擇院區 —');});
+    fill('injdr',d.doctors,'— 選擇醫師 —');
+    fill('injnr',d.nurses,'— 選擇護理師 —');
+    ['injtp','purtp'].forEach(function(id){fill(id,d.injTypes,'— 選擇針劑類型 —');});
     dot.className='sdot ok';txt.textContent='已連線';
   });
 };
 
 // ── 模式切換 ──
 function setMode(m){
-  document.getElementById('search-mode').style.display = m==='search'?'block':'none';
-  document.getElementById('new-mode').style.display    = m==='new'?'block':'none';
-  document.getElementById('mode-search').classList.toggle('on', m==='search');
-  document.getElementById('mode-new').classList.toggle('on', m==='new');
-  hide('p-found'); hide('not-found');
-  document.getElementById('btn-next-search').style.display='none';
+  document.getElementById('m-search').style.display=m==='search'?'block':'none';
+  document.getElementById('m-new').style.display=m==='new'?'block':'none';
+  document.getElementById('mb-search').classList.toggle('on',m==='search');
+  document.getElementById('mb-new').classList.toggle('on',m==='new');
+  hide('pfound');hide('nfbox');
+  document.getElementById('btn-next').style.display='none';
   CUR=null;
 }
 
 // ── 查詢病人 ──
 function doSearch(){
-  var no=document.getElementById('s-no').value.trim();
-  var cl=document.getElementById('s-cl').value;
+  var no=document.getElementById('sno').value.trim();
+  var cl=document.getElementById('scl').value;
   if(!no){toast('請輸入病歷號','warn');return;}
   if(!cl){toast('請選擇院區','warn');return;}
-  hide('p-found');hide('not-found');
-  document.getElementById('btn-next-search').style.display='none';
+  hide('pfound');hide('nfbox');
+  document.getElementById('btn-next').style.display='none';
   get({action:'searchPatient',chartNo:no,clinic:cl},function(p){
     if(p.found){
       CUR=p;
-      document.getElementById('p-av').textContent=p.name?p.name.slice(-1):'?';
-      document.getElementById('p-name').textContent=p.name;
-      document.getElementById('p-meta').textContent='病歷號：'+p.chartNo+(p.gender?' · '+p.gender:'')+(p.birthDate?' · '+p.birthDate:'');
-      document.getElementById('p-tag').textContent=p.clinic;
-      show('p-found');
-      document.getElementById('btn-next-search').style.display='flex';
+      document.getElementById('pav').textContent=p.name?p.name.slice(-1):'?';
+      document.getElementById('pnm').textContent=p.name;
+      document.getElementById('pmt').textContent='病歷號：'+p.chartNo+(p.gender?' · '+p.gender:'')+(p.birthDate?' · '+p.birthDate:'');
+      document.getElementById('ptg').textContent=p.clinic;
+      show('pfound');
+      document.getElementById('btn-next').style.display='flex';
     }else{
-      CUR=null;
-      show('not-found');
+      CUR=null;show('nfbox');
     }
   });
 }
 
 // ── 新增病人 ──
 function addPt(){
-  var no=document.getElementById('np-no').value.trim();
-  var nm=document.getElementById('np-nm').value.trim();
-  var cl=document.getElementById('np-cl').value;
+  var no=document.getElementById('npno').value.trim();
+  var nm=document.getElementById('npnm').value.trim();
+  var cl=document.getElementById('npcl').value;
   if(!no||!nm){toast('病歷號與姓名為必填','warn');return;}
   if(!cl){toast('請選擇院區','warn');return;}
   get({action:'addPatient',chartNo:no,name:nm,clinic:cl,
-       gender:document.getElementById('np-sx').value,
-       birthDate:document.getElementById('np-bd').value},
+       gender:document.getElementById('npsx').value,
+       birthDate:document.getElementById('npbd').value},
     function(r){
       if(r.success){
         toast('✅ 病人已新增','ok');
         CUR={chartNo:no,name:nm,clinic:cl,
-             gender:document.getElementById('np-sx').value,
-             birthDate:document.getElementById('np-bd').value};
-        goToStep2();
+             gender:document.getElementById('npsx').value,
+             birthDate:document.getElementById('npbd').value};
+        goStep2();
       }else toast('❌ '+(r.error||'新增失敗'),'err');
     }
   );
 }
 
-// ── 進入 STEP 2 ──
-function goToStep2(){
+// ── 進入 Step 2 ──
+function goStep2(){
   if(!CUR){toast('請先選擇病人','warn');return;}
-  // 更新步驟指示
-  document.getElementById('step1').className='step done';
-  document.getElementById('step2').className='step active';
-  // 隱藏 step1，顯示 step2
-  document.getElementById('step1-card').style.display='none';
-  document.getElementById('step2-section').style.display='block';
-  // 填入病人摘要
-  document.getElementById('inj-av').textContent=CUR.name?CUR.name.slice(-1):'?';
-  document.getElementById('inj-pname').textContent=CUR.name;
-  document.getElementById('inj-pmeta').textContent='病歷號：'+CUR.chartNo+(CUR.gender?' · '+CUR.gender:'')+(CUR.birthDate?' · '+CUR.birthDate:'');
-  document.getElementById('inj-ptag').textContent=CUR.clinic;
-  // 施打院區預選病人所屬院區
-  document.getElementById('inj-cl').value=CUR.clinic;
+  document.getElementById('s1').style.display='none';
+  document.getElementById('s2').style.display='block';
+  // 填病人摘要
+  document.getElementById('iav').textContent=CUR.name?CUR.name.slice(-1):'?';
+  document.getElementById('inm').textContent=CUR.name;
+  document.getElementById('imt').textContent='病歷號：'+CUR.chartNo+(CUR.gender?' · '+CUR.gender:'')+(CUR.birthDate?' · '+CUR.birthDate:'');
+  document.getElementById('itg').textContent=CUR.clinic;
+  // 施打院區預選
+  document.getElementById('injcl').value=CUR.clinic;
   setNow();
-  loadBalPreview();
-  autoSeq();
-  loadHist(CUR.chartNo,CUR.clinic);
+  loadAll();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ── 返回 STEP 1 ──
-function backToStep1(){
+// ── 返回 Step 1 ──
+function backS1(){
   CUR=null;
-  document.getElementById('step1').className='step active';
-  document.getElementById('step2').className='step';
-  document.getElementById('step1-card').style.display='block';
-  document.getElementById('step2-section').style.display='none';
-  hide('p-found');hide('not-found');
-  document.getElementById('btn-next-search').style.display='none';
+  document.getElementById('s1').style.display='block';
+  document.getElementById('s2').style.display='none';
+  hide('pfound');hide('nfbox');
+  document.getElementById('btn-next').style.display='none';
+  document.getElementById('pur-form').style.display='none';
+}
+
+// ── 載入所有資料 ──
+function loadAll(){
+  loadBal();
+  autoSeq();
+  loadHist();
+}
+
+// ── 餘量 & 購買歷史 ──
+function loadBal(){
+  var cards=document.getElementById('bal-cards');
+  cards.innerHTML='<div class="loader"><div class="sp"></div>載入中…</div>';
+  get({action:'getBalances',chartNo:CUR.chartNo,clinic:CUR.clinic},function(d){
+    // 餘量卡片
+    if(!d.balances||!d.balances.length){
+      cards.innerHTML='<p style="font-size:13px;color:var(--ink3);padding:4px 0 12px">尚無購買記錄</p>';
+    }else{
+      cards.innerHTML='<div class="bal-summary">';
+      d.balances.forEach(function(b){
+        var pct=b.purchased>0?Math.round(b.remaining/b.purchased*100):0;
+        var low=b.remaining<=100,warn=b.remaining<=200&&!low;
+        var cls=low||warn?'bc warn':'bc';
+        var vcls=low?'danger-v':warn?'warn-v':'ok';
+        cards.innerHTML+='<div class="'+cls+'"><div class="bc-tag">針劑餘量</div><div class="bc-type">'+b.injType+'</div>'+
+          '<div class="bc-rows"><span class="bk">購買</span><span class="bv">'+b.purchased.toFixed(1)+' mg</span>'+
+          '<span class="bk">已用</span><span class="bv">'+b.used.toFixed(1)+' mg</span>'+
+          '<span class="bk">剩餘</span><span class="'+vcls+'">'+b.remaining.toFixed(1)+' mg（'+pct+'%）</span></div></div>';
+      });
+      cards.innerHTML+='</div>';
+    }
+    // 購買歷史表格
+    var hist=d.history||[];
+    document.getElementById('purct').textContent=hist.length+' 筆';
+    var pb=document.getElementById('purbody');
+    if(!hist.length){pb.innerHTML='<div class="empty">尚無購買記錄</div>';return;}
+    pb.innerHTML='<div class="tscroll"><table>'+
+      '<thead><tr><th>購買日期</th><th>針劑類型</th><th>購買總量</th><th>備註</th></tr></thead>'+
+      '<tbody>'+hist.map(function(h){
+        return '<tr><td><b>'+h.date+'</b></td>'+
+          '<td><span class="chip cp">'+h.injType+'</span></td>'+
+          '<td><span class="chip ct">'+h.totalMg+' mg</span></td>'+
+          '<td style="color:var(--ink3)">'+(h.note||'—')+'</td></tr>';
+      }).join('')+'</tbody></table></div>';
+    calcRem();
+  });
+}
+
+// ── 購買表單顯示/隱藏 ──
+function showAddPur(){
+  var f=document.getElementById('pur-form');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
+function hidePurForm(){document.getElementById('pur-form').style.display='none';}
+
+function submitPur(){
+  if(!CUR)return;
+  var dt=document.getElementById('purdt').value;
+  var tp=document.getElementById('purtp').value;
+  var mg=document.getElementById('purmg').value;
+  var note=document.getElementById('purnote').value;
+  if(!dt||!tp||!mg){toast('請填寫購買日期、針劑類型與總量','warn');return;}
+  get({action:'addPurchase',chartNo:CUR.chartNo,patientClinic:CUR.clinic,
+       date:dt,injType:tp,totalMg:parseFloat(mg),note:note},
+    function(r){
+      if(r.success){
+        toast('✅ 購買記錄已儲存','ok');
+        document.getElementById('purmg').value='';
+        document.getElementById('purnote').value='';
+        document.getElementById('pur-form').style.display='none';
+        loadBal();
+      }else toast('❌ '+(r.error||'儲存失敗'),'err');
+    }
+  );
 }
 
 // ── 自動帶入次數 ──
 function autoSeq(){
-  if(!CUR)return;
   get({action:'getHistory',chartNo:CUR.chartNo,clinic:CUR.clinic},function(r){
-    document.getElementById('inj-seq').value=(Array.isArray(r)?r.length:0)+1;
+    document.getElementById('injseq').value=(Array.isArray(r)?r.length:0)+1;
   });
 }
 
-// ── 餘量快覽 ──
-function loadBalPreview(){
+// ── 計算施打後剩餘 ──
+function calcRem(){
   if(!CUR)return;
-  get({action:'getBalances',chartNo:CUR.chartNo,clinic:CUR.clinic},function(d){
-    var wrap=document.getElementById('bal-preview');
-    if(!d.balances||!d.balances.length){wrap.innerHTML='<p style="font-size:13px;color:var(--ink3);margin-bottom:16px;">此病人尚無購買針劑記錄，可至「針劑餘量」頁新增</p>';return;}
-    wrap.innerHTML='<div class="slabel" style="margin-bottom:10px">目前針劑餘量</div><div class="bal-grid">';
-    d.balances.forEach(function(b){
-      var low=b.remaining<=100,warn=b.remaining<=200&&!low;
-      var cls=low||warn?'bal-card warn':'bal-card';
-      var vcls=low?'bv-danger':warn?'bv-warn':'bv-ok';
-      wrap.innerHTML+='<div class="'+cls+'"><div class="bal-tag">針劑餘量</div><div class="bal-type">'+b.injType+'</div>'+
-        '<div class="bal-rows"><span class="bk">購買</span><span class="bv">'+b.purchased.toFixed(1)+' mg</span>'+
-        '<span class="bk">已用</span><span class="bv">'+b.used.toFixed(1)+' mg</span>'+
-        '<span class="bk">剩餘</span><span class="'+vcls+'">'+b.remaining.toFixed(1)+' mg</span></div></div>';
-    });
-    wrap.innerHTML+='</div><div class="div"></div>';
-    calcRemain();
-  });
-}
-
-// ── 計算剩餘 ──
-function calcRemain(){
-  if(!CUR)return;
-  var type=document.getElementById('inj-tp').value;
-  var dose=parseFloat(document.getElementById('inj-mg').value)||0;
-  var box=document.getElementById('remain-box');
-  if(!type){box.textContent='請先選擇針劑類型';box.className='remain-box empty';return;}
+  var type=document.getElementById('injtp').value;
+  var dose=parseFloat(document.getElementById('injmg').value)||0;
+  var box=document.getElementById('rembox');
+  if(!type){box.textContent='請先選擇針劑類型';box.className='rem empty';return;}
   get({action:'getBalances',chartNo:CUR.chartNo,clinic:CUR.clinic},function(d){
     var found=null;
     (d.balances||[]).forEach(function(b){if(b.injType===type)found=b;});
-    if(!found){box.textContent='此針劑尚無購買記錄，請至「針劑餘量」頁新增';box.className='remain-box empty';return;}
+    if(!found){box.textContent='此針劑尚無購買記錄，請先新增購買';box.className='rem empty';return;}
     var after=found.remaining-dose;
     box.textContent=after.toFixed(1)+' mg';
-    box.className='remain-box'+(after<0?' danger':after<=100?' warn':'');
+    box.className='rem'+(after<0?' danger':after<=100?' warn':'');
   });
 }
 
@@ -562,15 +543,15 @@ function calcRemain(){
 function submitInj(){
   if(!CUR){toast('請先選擇病人','warn');return;}
   var v={
-    dt:document.getElementById('inj-dt').value,
-    tm:document.getElementById('inj-tm').value,
-    seq:document.getElementById('inj-seq').value,
-    cl:document.getElementById('inj-cl').value,
-    tp:document.getElementById('inj-tp').value,
-    dr:document.getElementById('inj-dr').value,
-    nr:document.getElementById('inj-nr').value,
-    mg:document.getElementById('inj-mg').value,
-    note:document.getElementById('inj-note').value
+    dt:document.getElementById('injdt').value,
+    tm:document.getElementById('injtm').value,
+    seq:document.getElementById('injseq').value,
+    cl:document.getElementById('injcl').value,
+    tp:document.getElementById('injtp').value,
+    dr:document.getElementById('injdr').value,
+    nr:document.getElementById('injnr').value,
+    mg:document.getElementById('injmg').value,
+    note:document.getElementById('injnote').value
   };
   if(!v.dt||!v.tm||!v.seq||!v.cl||!v.tp||!v.dr||!v.nr||!v.mg){
     toast('請填寫所有必填欄位（*）','warn');return;
@@ -582,110 +563,35 @@ function submitInj(){
     function(r){
       if(r.success){
         toast('✅ 施打記錄已儲存','ok');
-        document.getElementById('inj-note').value='';
-        document.getElementById('inj-mg').value='';
-        document.getElementById('remain-box').textContent='請先選擇針劑類型並輸入劑量';
-        document.getElementById('remain-box').className='remain-box empty';
-        setNow();loadBalPreview();autoSeq();loadHist(CUR.chartNo,CUR.clinic);
+        document.getElementById('injnote').value='';
+        document.getElementById('injmg').value='';
+        document.getElementById('rembox').textContent='請先選擇針劑類型並輸入劑量';
+        document.getElementById('rembox').className='rem empty';
+        setNow();loadBal();autoSeq();loadHist();
       }else toast('❌ '+(r.error||'儲存失敗'),'err');
     }
   );
 }
 
-// ── 歷史 ──
-function loadHist(no,cl){
-  var body=document.getElementById('hist-body');
-  body.innerHTML='<div class="loader"><div class="spin-ring"></div>載入中…</div>';
-  get({action:'getHistory',chartNo:no,clinic:cl},function(recs){
-    document.getElementById('hist-ct').textContent=(recs.length||0)+' 筆';
-    if(!recs.length){body.innerHTML='<div class="empty-state"><p>尚無施打記錄</p></div>';return;}
-    body.innerHTML='<div class="tbl-scroll"><table>'+
+// ── 施打歷史 ──
+function loadHist(){
+  var body=document.getElementById('histbody');
+  body.innerHTML='<div class="loader"><div class="sp"></div>載入中…</div>';
+  get({action:'getHistory',chartNo:CUR.chartNo,clinic:CUR.clinic},function(recs){
+    document.getElementById('histct').textContent=(recs.length||0)+' 筆';
+    if(!recs.length){body.innerHTML='<div class="empty">尚無施打記錄</div>';return;}
+    body.innerHTML='<div class="tscroll"><table>'+
       '<thead><tr><th>次數</th><th>日期</th><th>時間</th><th>針劑類型</th><th>劑量</th><th>施打院區</th><th>醫師</th><th>護理師</th><th>備註</th></tr></thead>'+
       '<tbody>'+recs.map(function(r){
-        return '<tr><td><span class="chip chip-k">第 '+r.seq+' 次</span></td>'+
+        return '<tr><td><span class="chip ck">第 '+r.seq+' 次</span></td>'+
           '<td><b>'+r.date+'</b></td><td>'+r.time+'</td>'+
-          '<td><span class="chip chip-p">'+r.injType+'</span></td>'+
-          '<td><span class="chip chip-t">'+r.dose+' mg</span></td>'+
-          '<td><span class="chip chip-g">'+r.clinic+'</span></td>'+
+          '<td><span class="chip cp">'+r.injType+'</span></td>'+
+          '<td><span class="chip ct">'+r.dose+' mg</span></td>'+
+          '<td><span class="chip cg">'+r.clinic+'</span></td>'+
           '<td>'+r.doctor+'</td><td>'+r.nurse+'</td>'+
           '<td style="color:var(--ink3)">'+(r.note||'—')+'</td></tr>';
       }).join('')+'</tbody></table></div>';
   });
-}
-
-// ── 針劑餘量頁 ──
-function loadBal(){
-  var no=document.getElementById('b-no').value.trim();
-  var cl=document.getElementById('b-cl').value;
-  if(!no){toast('請輸入病歷號','warn');return;}
-  if(!cl){toast('請選擇院區','warn');return;}
-  hide('b-found');document.getElementById('bal-main').style.display='none';
-  get({action:'searchPatient',chartNo:no,clinic:cl},function(p){
-    if(!p.found){toast('查無此病人','warn');BALP=null;return;}
-    BALP=p;
-    var bb=document.getElementById('b-found');
-    bb.innerHTML='<div class="p-av">'+(p.name?p.name.slice(-1):'?')+'</div>'+
-      '<div><div class="p-name-txt">'+p.name+'</div>'+
-      '<div class="p-meta">病歷號：'+p.chartNo+(p.gender?' · '+p.gender:'')+'</div>'+
-      '<div class="p-tag">'+p.clinic+'</div></div>';
-    show('b-found');
-    document.getElementById('bal-main').style.display='block';
-    renderBal(no,cl);
-  });
-}
-
-function renderBal(no,cl){
-  var cards=document.getElementById('bal-cards');
-  cards.innerHTML='<div class="loader"><div class="spin-ring"></div></div>';
-  get({action:'getBalances',chartNo:no,clinic:cl},function(d){
-    if(!d.balances||!d.balances.length){
-      cards.innerHTML='<div class="empty-state"><p>尚無購買記錄，請先新增購買</p></div>';
-    }else{
-      cards.innerHTML='';
-      d.balances.forEach(function(b){
-        var pct=b.purchased>0?Math.round(b.remaining/b.purchased*100):0;
-        var low=b.remaining<=100,warn=b.remaining<=200&&!low;
-        var cls=low||warn?'bal-card warn':'bal-card';
-        var vcls=low?'bv-danger':warn?'bv-warn':'bv-ok';
-        cards.innerHTML+='<div class="'+cls+'"><div class="bal-tag">針劑餘量</div><div class="bal-type">'+b.injType+'</div>'+
-          '<div class="bal-rows"><span class="bk">購買總量</span><span class="bv">'+b.purchased.toFixed(1)+' mg</span>'+
-          '<span class="bk">已施打</span><span class="bv">'+b.used.toFixed(1)+' mg</span>'+
-          '<span class="bk">剩餘</span><span class="'+vcls+'">'+b.remaining.toFixed(1)+' mg（'+pct+'%）</span></div></div>';
-      });
-    }
-    var hist=d.history||[];
-    document.getElementById('pur-ct').textContent=hist.length+' 筆';
-    var pb=document.getElementById('pur-body');
-    if(!hist.length){pb.innerHTML='<div class="empty-state"><p>尚無購買記錄</p></div>';return;}
-    pb.innerHTML='<div class="tbl-scroll"><table>'+
-      '<thead><tr><th>購買日期</th><th>針劑類型</th><th>購買總量</th><th>備註</th></tr></thead>'+
-      '<tbody>'+hist.map(function(h){
-        return '<tr><td><b>'+h.date+'</b></td>'+
-          '<td><span class="chip chip-p">'+h.injType+'</span></td>'+
-          '<td><span class="chip chip-t">'+h.totalMg+' mg</span></td>'+
-          '<td style="color:var(--ink3)">'+(h.note||'—')+'</td></tr>';
-      }).join('')+'</tbody></table></div>';
-  });
-}
-
-function submitPur(){
-  if(!BALP){toast('請先查詢病人','warn');return;}
-  var dt=document.getElementById('pur-dt').value;
-  var tp=document.getElementById('pur-tp').value;
-  var mg=document.getElementById('pur-mg').value;
-  var note=document.getElementById('pur-note').value;
-  if(!dt||!tp||!mg){toast('請填寫購買日期、針劑類型與總量','warn');return;}
-  get({action:'addPurchase',chartNo:BALP.chartNo,patientClinic:BALP.clinic,
-       date:dt,injType:tp,totalMg:parseFloat(mg),note:note},
-    function(r){
-      if(r.success){
-        toast('✅ 購買記錄已儲存','ok');
-        document.getElementById('pur-mg').value='';
-        document.getElementById('pur-note').value='';
-        renderBal(BALP.chartNo,BALP.clinic);
-      }else toast('❌ '+(r.error||'儲存失敗'),'err');
-    }
-  );
 }
 </script>
 </body>
