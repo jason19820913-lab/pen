@@ -453,9 +453,22 @@ function loadBal(){
   var cards=document.getElementById('bal-cards');
   cards.innerHTML='<div class="loader"><div class="sp"></div>載入中…</div>';
   get({action:'getBalances',chartNo:CUR.chartNo,clinic:CUR.clinic},function(d){
+    var types=(d.balances||[]).map(function(b){return b.injType;});
+
+    // ★ 施打針劑類型選單 → 只顯示病人有購買過的類型
+    var injSel=document.getElementById('injtp');
+    var prevVal=injSel.value;
+    injSel.innerHTML='<option value="">— 選擇 —</option>';
+    if(types.length){
+      types.forEach(function(t){injSel.innerHTML+='<option value="'+t+'">'+t+'</option>';});
+      if(prevVal && types.indexOf(prevVal)>-1) injSel.value=prevVal;
+    }else{
+      injSel.innerHTML='<option value="">（請先新增購買記錄）</option>';
+    }
+
     // 餘量卡片
     if(!d.balances||!d.balances.length){
-      cards.innerHTML='<p style="font-size:13px;color:var(--ink3);padding:4px 0 12px">尚無購買記錄</p>';
+      cards.innerHTML='<p style="font-size:13px;color:var(--ink3);padding:4px 0 12px">尚無購買記錄，請點「✚ 新增購買」</p>';
     }else{
       cards.innerHTML='<div class="bal-summary">';
       d.balances.forEach(function(b){
@@ -470,6 +483,7 @@ function loadBal(){
       });
       cards.innerHTML+='</div>';
     }
+
     // 購買歷史表格
     var hist=d.history||[];
     document.getElementById('purct').textContent=hist.length+' 筆';
