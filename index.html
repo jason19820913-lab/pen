@@ -284,10 +284,7 @@ function _hide(id){document.getElementById(id).classList.remove('show');}
 window.onload=async function(){
   setNow();
   document.getElementById('pur-date').value=new Date().toISOString().slice(0,10);
-  if(API_URL==='https://script.google.com/macros/s/AKfycbwu4Wa582TsuDsgmDhoFVMcoXW3uVBRz6xIGuLsd2zKvYfnqs_vq41rr8jtSuEiGZrf/exec'){
-    document.getElementById('api-txt').textContent='⚠ 請設定 API_URL';
-    document.getElementById('api-dot').className='api-dot err';
-    toast('請在 index.html 填入 Apps Script API 網址','warn'); return;
+  
   }
   try{
     var d=await apiGet({action:'getLists'});
