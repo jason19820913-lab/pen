@@ -408,6 +408,46 @@ function fill(id,list,ph){
 // ── 初始化 ──
 var CUR_USER = null;
 
+// ── 民國年工具 ──
+// 輸入格式化：自動補斜線 072/09/13
+function fmtRocInput(el){
+  var v = el.value.replace(/[^0-9]/g,'');
+  if(v.length > 7) v = v.slice(0,7);
+  var out = '';
+  if(v.length <= 3)      out = v;
+  else if(v.length <= 5) out = v.slice(0,3)+'/'+v.slice(3);
+  else                   out = v.slice(0,3)+'/'+v.slice(3,5)+'/'+v.slice(5);
+  el.value = out;
+  // 即時預覽西元年
+  var prev = document.getElementById('npbd-preview');
+  var ad = rocToAd(out);
+  prev.textContent = ad ? '西元：'+ad : '';
+}
+
+// 民國年轉西元年（輸入：072/09/13 或 72/9/13，輸出：1983-09-13）
+function rocToAd(roc){
+  if(!roc) return '';
+  var parts = roc.replace(/\/g,'/').split('/');
+  if(parts.length < 1) return '';
+  var y = parseInt(parts[0])||0;
+  if(y <= 0) return '';
+  var adY = y + 1911;
+  var m = parts[1] ? String(parseInt(parts[1])||1).padStart(2,'0') : '01';
+  var d = parts[2] ? String(parseInt(parts[2])||1).padStart(2,'0') : '01';
+  return adY+'-'+m+'-'+d;
+}
+
+// 西元年轉民國年顯示（1983-09-13 → 民國 072 年 09 月 13 日）
+function adToRocDisplay(ad){
+  if(!ad) return '';
+  var parts = ad.split('-');
+  if(parts.length < 1) return ad;
+  var y = parseInt(parts[0])-1911;
+  var m = parts[1]||'';
+  var d = parts[2]||'';
+  return '民國 '+String(y).padStart(3,'0')+' 年 '+m+' 月 '+d+' 日';
+}
+
 window.onload=function(){
   setNow();
   document.getElementById('purdt').value=new Date().toISOString().slice(0,10);
@@ -531,9 +571,11 @@ function addPt(){
   var cl=document.getElementById('npcl').value;
   if(!no||!nm){toast('病歷號與姓名為必填','warn');return;}
   if(!cl){toast('請選擇院區','warn');return;}
+  var rocBd = document.getElementById('npbd').value.trim();
+  var adBd  = rocToAd(rocBd);
   get({action:'addPatient',chartNo:no,name:nm,clinic:cl,
        gender:document.getElementById('npsx').value,
-       birthDate:document.getElementById('npbd').value,
+       birthDate:adBd,
        createdBy:CUR_USER||''},
     function(r){
       if(r.success){
