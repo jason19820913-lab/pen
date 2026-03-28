@@ -497,7 +497,9 @@ function get(p,cb){
   fetch(API+'?'+q).then(function(r){return r.json();}).then(cb).catch(function(e){toast('連線錯誤','err');console.error(e);});
 }
 function post(b,cb){
-  fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})
+  // 改用 GET 傳參數，避免 CORS 問題
+  var q=Object.keys(b).map(function(k){return encodeURIComponent(k)+'='+encodeURIComponent(b[k]===null||b[k]===undefined?'':b[k]);}).join('&');
+  fetch(API+'?'+q)
     .then(function(r){return r.json();}).then(cb).catch(function(e){toast('連線錯誤','err');console.error(e);});
 }
 
