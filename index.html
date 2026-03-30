@@ -289,8 +289,8 @@ tbody tr:hover td{background:var(--tl);}
       <div class="fg3">
         <div class="field"><label>購買日期<span class="req">*</span></label><input id="purdt" type="date"></div>
         <div class="field"><label>針劑類型<span class="req">*</span></label>
-          <select id="purtp"><option value="">— 選擇 —</option></select></div>
-        <div class="field"><label>購買總量 (mg)<span class="req">*</span></label>
+          <select id="purtp" onchange="autoFillSpec()"><option value="">— 選擇 —</option></select></div>
+        <div class="field"><label>可施打劑量 (mg)<span class="req">*</span></label>
           <input id="purmg" type="number" min="1" step="0.1" placeholder="300"></div>
         <div class="field s2"><label>備註（選填）</label>
           <input id="purnote" type="text" placeholder="處方單號等"></div>
@@ -407,6 +407,7 @@ function fill(id,list,ph){
 
 // ── 初始化 ──
 var CUR_USER = null;
+var INJ_SPECS = {};
 
 
 
@@ -430,6 +431,7 @@ window.onload=function(){
     fill('injdr',d.doctors,'— 選擇醫師 —');
     fill('injnr',d.nurses,'— 選擇護理師 —');
     ['injtp','purtp'].forEach(function(id){fill(id,d.injTypes,'— 選擇針劑類型 —');});
+    INJ_SPECS = d.injSpecs || {};
     dot.className='sdot ok';txt.textContent='已連線';
   });
 };
@@ -642,6 +644,16 @@ function showAddPur(){
   f.style.display=f.style.display==='none'?'block':'none';
 }
 function hidePurForm(){document.getElementById('pur-form').style.display='none';}
+
+function autoFillSpec(){
+  var tp  = document.getElementById('purtp').value;
+  var mgEl= document.getElementById('purmg');
+  if(tp && INJ_SPECS[tp]){
+    mgEl.value = INJ_SPECS[tp];
+  } else {
+    mgEl.value = '';
+  }
+}
 
 function submitPur(){
   if(!CUR)return;
