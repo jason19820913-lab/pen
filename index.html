@@ -29,7 +29,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--ink)
 .sdot.ok{background:#34d399;}.sdot.err{background:#f87171;}.sdot.spin{background:#94a3b8;animation:rot .8s linear infinite;}
 @keyframes rot{to{transform:rotate(360deg)}}
 
-main{max-width:800px;margin:0 auto;padding:20px 16px 80px;}
+main{max-width:1100px;margin:0 auto;padding:20px 16px 80px;}
 
 /* Cards */
 .card{background:var(--w);border:1px solid var(--line);border-radius:var(--r16);padding:20px;margin-bottom:14px;box-shadow:var(--sh);}
@@ -99,7 +99,7 @@ textarea{resize:vertical;min-height:72px;}
 .btn-full{width:100%;justify-content:center;}
 
 /* 購買/餘量卡片區 */
-.bal-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:0;}
+.bal-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:0;}
 .bc{border-radius:var(--r12);padding:14px 16px;border:1.5px solid var(--pm);background:var(--pl);}
 .bc.warn{border-color:var(--am);background:var(--al);}
 .bc-tag{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--purple);text-transform:uppercase;margin-bottom:3px;}
@@ -113,8 +113,8 @@ textarea{resize:vertical;min-height:72px;}
 .tscroll{overflow-x:auto;border-radius:var(--r12);border:1px solid var(--line);}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 thead{background:var(--line2);}
-th{padding:10px 12px;text-align:left;font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;border-bottom:1px solid var(--line);white-space:nowrap;}
-td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:middle;color:var(--ink2);}
+th{padding:10px 14px;text-align:left;font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;border-bottom:1px solid var(--line);white-space:nowrap;}
+td{padding:10px 14px;border-bottom:1px solid var(--line2);vertical-align:middle;color:var(--ink2);white-space:nowrap;}
 tr:last-child td{border-bottom:none;}
 tbody tr:hover td{background:var(--tl);}
 .chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;}
@@ -614,7 +614,7 @@ function loadBal(){
         var cls=low||warn?'bc warn':'bc';
         var vcls=low?'danger-v':warn?'warn-v':'ok';
         cards.innerHTML+='<div class="'+cls+'"><div class="bc-tag">針劑餘量</div><div class="bc-type">'+b.injType+'</div>'+
-          '<div class="bc-rows"><span class="bk">購買</span><span class="bv">'+b.purchased.toFixed(1)+' mg</span>'+
+          '<div class="bc-rows"><span class="bk">可施打</span><span class="bv">'+b.purchased.toFixed(1)+' mg</span>'+
           '<span class="bk">已用</span><span class="bv">'+b.used.toFixed(1)+' mg</span>'+
           '<span class="bk">剩餘</span><span class="'+vcls+'">'+b.remaining.toFixed(1)+' mg（'+pct+'%）</span></div></div>';
       });
@@ -627,7 +627,7 @@ function loadBal(){
     var pb=document.getElementById('purbody');
     if(!hist.length){pb.innerHTML='<div class="empty">尚無購買記錄</div>';return;}
     pb.innerHTML='<div class="tscroll"><table>'+
-      '<thead><tr><th>購買日期</th><th>針劑類型</th><th>購買總量</th><th>備註</th></tr></thead>'+
+      '<thead><tr><th>購買日期</th><th>針劑類型</th><th>可施打劑量</th><th>備註</th></tr></thead>'+
       '<tbody>'+hist.map(function(h){
         return '<tr><td><b>'+h.date+'</b></td>'+
           '<td><span class="chip cp">'+h.injType+'</span></td>'+
@@ -742,7 +742,12 @@ function loadHist(){
     document.getElementById('histct').textContent=(recs.length||0)+' 筆';
     if(!recs.length){body.innerHTML='<div class="empty">尚無施打記錄</div>';return;}
     body.innerHTML='<div class="tscroll"><table>'+
-      '<thead><tr><th>次數</th><th>日期</th><th>時間</th><th>針劑類型</th><th>劑量</th><th>施打院區</th><th>醫師</th><th>護理師</th><th>備註</th></tr></thead>'+
+      '<colgroup>'+
+        '<col style="min-width:80px"><col style="min-width:110px"><col style="min-width:70px">'+
+        '<col style="min-width:180px"><col style="min-width:80px"><col style="min-width:100px">'+
+        '<col style="min-width:90px"><col style="min-width:90px"><col style="min-width:80px">'+
+        '</colgroup>'+
+        '<thead><tr><th>次數</th><th>日期</th><th>時間</th><th>針劑類型</th><th>劑量</th><th>施打院區</th><th>醫師</th><th>護理師</th><th>備註</th></tr></thead>'+
       '<tbody>'+recs.map(function(r){
         return '<tr><td><span class="chip ck">第 '+r.seq+' 次</span></td>'+
           '<td><b>'+r.date+'</b></td><td>'+r.time+'</td>'+
