@@ -607,7 +607,7 @@ function loadBal(){
     if(!d.balances||!d.balances.length){
       cards.innerHTML='<p style="font-size:13px;color:var(--ink3);padding:4px 0 12px">尚無購買記錄，請點「✚ 新增購買」</p>';
     }else{
-      cards.innerHTML='<div class="bal-summary">';
+      cards.innerHTML='';
       d.balances.forEach(function(b){
         var pct=b.purchased>0?Math.round(b.remaining/b.purchased*100):0;
         var low=b.remaining<=100,warn=b.remaining<=200&&!low;
@@ -618,7 +618,7 @@ function loadBal(){
           '<span class="bk">已用</span><span class="bv">'+b.used.toFixed(1)+' mg</span>'+
           '<span class="bk">剩餘</span><span class="'+vcls+'">'+b.remaining.toFixed(1)+' mg（'+pct+'%）</span></div></div>';
       });
-      cards.innerHTML+='</div>';
+
     }
 
     // 購買歷史表格
