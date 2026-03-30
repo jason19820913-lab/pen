@@ -63,7 +63,7 @@ main{max-width:1100px;margin:0 auto;padding:20px 16px 80px;}
 /* 表單 */
 .fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
 .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 14px;}
-@media(max-width:560px){.fg2{grid-template-columns:1fr;}.fg3{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.fg2{grid-template-columns:1fr;}.fg3{grid-template-columns:1fr 1fr;}.bal-summary{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:360px){.fg3{grid-template-columns:1fr;}}
 .s2{grid-column:1/-1;}
 .field{display:flex;flex-direction:column;gap:5px;}
@@ -99,7 +99,7 @@ textarea{resize:vertical;min-height:72px;}
 .btn-full{width:100%;justify-content:center;}
 
 /* 購買/餘量卡片區 */
-.bal-summary{display:grid;grid-template-columns:repeat(auto-fill,200px);gap:10px;margin-bottom:0;}
+.bal-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:0;}
 .bc{border-radius:var(--r12);padding:14px 16px;border:1.5px solid var(--pm);background:var(--pl);width:100%;}
 .bc.warn{border-color:var(--am);background:var(--al);}
 .bc-tag{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--purple);text-transform:uppercase;margin-bottom:3px;}
