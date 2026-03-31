@@ -511,6 +511,7 @@ function doSearch(){
   var cl=document.getElementById('scl').value;
   if(!no){toast('請輸入病歷號','warn');return;}
   if(!cl){toast('請選擇院區','warn');return;}
+  clearForm();
   hide('pfound');hide('nfbox');
   document.getElementById('btn-next').style.display='none';
   get({action:'searchPatient',chartNo:no,clinic:cl},function(p){
@@ -545,6 +546,11 @@ function addPt(){
         CUR={chartNo:no,name:nm,clinic:cl,
              gender:document.getElementById('npsx').value,
              birthDate:document.getElementById('npbd').value};
+        // 清空新增病人表單
+        document.getElementById('npno').value='';
+        document.getElementById('npnm').value='';
+        document.getElementById('npcl').value='';
+        document.getElementById('npbd').value='';
         goStep2();
       }else toast('❌ '+(r.error||'新增失敗'),'err');
     }
@@ -568,14 +574,43 @@ function goStep2(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// ── 清空表單 ──
+function clearForm(){
+  // 施打表單
+  document.getElementById('injseq').value='';
+  document.getElementById('injcl').value='';
+  document.getElementById('injtp').value='';
+  document.getElementById('injdr').value='';
+  document.getElementById('injnr').value='';
+  document.getElementById('injmg').value='';
+  document.getElementById('injnote').value='';
+  document.getElementById('rembox').textContent='請先選擇針劑類型並輸入劑量';
+  document.getElementById('rembox').className='rem empty';
+  document.getElementById('bal-cards').innerHTML='';
+  document.getElementById('bal-preview') && (document.getElementById('bal-preview').innerHTML='');
+  document.getElementById('histbody').innerHTML='';
+  document.getElementById('histct').textContent='0 筆';
+  // 購買表單
+  document.getElementById('purmg').value='';
+  document.getElementById('purtp').value='';
+  document.getElementById('purnote').value='';
+  document.getElementById('pur-form').style.display='none';
+  // 購買歷史
+  document.getElementById('purbody').innerHTML='';
+  document.getElementById('purct').textContent='0 筆';
+  setNow();
+}
+
 // ── 返回 Step 1 ──
 function backS1(){
   CUR=null;
+  clearForm();
   document.getElementById('s1').style.display='block';
   document.getElementById('s2').style.display='none';
   hide('pfound');hide('nfbox');
   document.getElementById('btn-next').style.display='none';
-  document.getElementById('pur-form').style.display='none';
+  document.getElementById('sno').value='';
+  document.getElementById('scl').value='';
 }
 
 // ── 載入所有資料 ──
