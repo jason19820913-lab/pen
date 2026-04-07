@@ -127,6 +127,13 @@ tbody tr:hover td{background:var(--tl);}
 .loader{display:flex;align-items:center;gap:10px;padding:24px;color:var(--ink3);font-size:13px;}
 .sp{width:20px;height:20px;border:2.5px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0;}
 
+.edit-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center;padding:16px;}
+.edit-modal-bg.on{display:flex;}
+.edit-modal{background:var(--w);border-radius:var(--r16);padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2);}
+.edit-modal h3{font-size:15px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.edit-footer{display:flex;gap:8px;margin-top:18px;}
+.edit-footer .btn{flex:1;justify-content:center;}
+.edited-tag{font-size:11px;color:var(--ink3);margin-top:4px;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;padding:12px 24px;border-radius:var(--r12);font-size:13.5px;font-weight:500;z-index:9999;opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;white-space:nowrap;max-width:92vw;box-shadow:0 4px 16px rgba(0,0,0,.25);}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.ok{background:#065f46;}.toast.err{background:#991b1b;}.toast.warn{background:#92400e;}
@@ -250,7 +257,7 @@ tbody tr:hover td{background:var(--tl);}
         <select id="npcl"><option value="">— 選擇院區 —</option></select></div>
       <div class="field"><label>性別</label>
         <select id="npsx"><option value="男">男</option><option value="女">女</option><option value="其他">其他</option></select></div>
-      <div class="field s2"><label>出生日期</label><input id="npbd" type="date"></div>
+      <div class="field s2"><label>出生日期<span class="req">*</span></label><input id="npbd" type="date"></div>
     </div>
     <button class="btn btn-t btn-full" style="margin-top:14px" onclick="addPt()">✚ 新增病人並繼續</button>
   </div>
@@ -378,6 +385,38 @@ tbody tr:hover td{background:var(--tl);}
 </div><!-- /s2 -->
 
 </main>
+
+<!-- ══ 修改施打記錄 Modal ══ -->
+<div id="edit-modal-bg" class="edit-modal-bg" onclick="if(event.target===this)closeEdit()">
+  <div class="edit-modal">
+    <h3>✏️ 修改施打記錄</h3>
+    <div class="fg3">
+      <div class="field"><label>第幾次<span class="req">*</span></label>
+        <input id="e-seq" type="number" min="1"></div>
+      <div class="field"><label>施打院區<span class="req">*</span></label>
+        <select id="e-cl"><option value="">— 選擇 —</option></select></div>
+      <div class="field"><label>針劑類型<span class="req">*</span></label>
+        <select id="e-tp"><option value="">— 選擇 —</option></select></div>
+      <div class="field"><label>施打日期<span class="req">*</span></label>
+        <input id="e-dt" type="date"></div>
+      <div class="field"><label>施打時間<span class="req">*</span></label>
+        <input id="e-tm" type="time"></div>
+      <div class="field"><label>施打劑量 (mg)<span class="req">*</span></label>
+        <input id="e-mg" type="number" min="0.1" step="0.1"></div>
+      <div class="field"><label>主治醫師<span class="req">*</span></label>
+        <select id="e-dr"><option value="">— 選擇 —</option></select></div>
+      <div class="field"><label>施打護理師<span class="req">*</span></label>
+        <select id="e-nr"><option value="">— 選擇 —</option></select></div>
+      <div class="field span2"><label>備註</label>
+        <textarea id="e-note" style="min-height:56px"></textarea></div>
+    </div>
+    <div class="edit-footer">
+      <button class="btn btn-t" onclick="submitEdit()">✓ 儲存修改</button>
+      <button class="btn btn-g" onclick="closeEdit()">取消</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -431,6 +470,10 @@ window.onload=function(){
     fill('injdr',d.doctors,'— 選擇醫師 —');
     fill('injnr',d.nurses,'— 選擇護理師 —');
     ['injtp','purtp'].forEach(function(id){fill(id,d.injTypes,'— 選擇針劑類型 —');});
+    fill('e-cl',d.clinics,'— 選擇 —');
+    fill('e-tp',d.injTypes,'— 選擇 —');
+    fill('e-dr',d.doctors,'— 選擇 —');
+    fill('e-nr',d.nurses,'— 選擇 —');
     INJ_SPECS = d.injSpecs || {};
     dot.className='sdot ok';txt.textContent='已連線';
   });
@@ -534,7 +577,9 @@ function addPt(){
   var no=document.getElementById('npno').value.trim();
   var nm=document.getElementById('npnm').value.trim();
   var cl=document.getElementById('npcl').value;
+  var bd=document.getElementById('npbd').value;
   if(!no||!nm){toast('病歷號與姓名為必填','warn');return;}
+  if(!bd){toast('請填寫出生日期','warn');return;}
   if(!cl){toast('請選擇院區','warn');return;}
   get({action:'addPatient',chartNo:no,name:nm,clinic:cl,
        gender:document.getElementById('npsx').value,
@@ -690,6 +735,60 @@ function autoFillSpec(){
   }
 }
 
+// ── 修改施打記錄 ──
+var EDIT_REC = null;
+
+function openEdit(r){
+  EDIT_REC = r;
+  document.getElementById('e-seq').value  = r.seq;
+  document.getElementById('e-cl').value   = r.clinic;
+  document.getElementById('e-tp').value   = r.injType;
+  document.getElementById('e-dt').value   = r.date;
+  document.getElementById('e-tm').value   = r.time;
+  document.getElementById('e-mg').value   = r.dose;
+  document.getElementById('e-dr').value   = r.doctor;
+  document.getElementById('e-nr').value   = r.nurse;
+  document.getElementById('e-note').value = r.note||'';
+  document.getElementById('edit-modal-bg').classList.add('on');
+}
+
+function closeEdit(){
+  document.getElementById('edit-modal-bg').classList.remove('on');
+  EDIT_REC = null;
+}
+
+function submitEdit(){
+  if(!EDIT_REC){toast('找不到記錄','err');return;}
+  var v={
+    seq:   document.getElementById('e-seq').value,
+    cl:    document.getElementById('e-cl').value,
+    tp:    document.getElementById('e-tp').value,
+    dt:    document.getElementById('e-dt').value,
+    tm:    document.getElementById('e-tm').value,
+    mg:    document.getElementById('e-mg').value,
+    dr:    document.getElementById('e-dr').value,
+    nr:    document.getElementById('e-nr').value,
+    note:  document.getElementById('e-note').value
+  };
+  if(!v.seq||!v.cl||!v.tp||!v.dt||!v.tm||!v.mg||!v.dr||!v.nr){
+    toast('請填寫所有必填欄位','warn');return;
+  }
+  get({action:'updateInjection', recId:EDIT_REC.id,
+       seq:parseInt(v.seq), clinic:v.cl, injType:v.tp,
+       date:v.dt, time:v.tm, dose:parseFloat(v.mg),
+       doctor:v.dr, nurse:v.nr, note:v.note,
+       editedBy:CUR_USER||''},
+    function(r){
+      if(r.success){
+        toast('✅ 修改已儲存','ok');
+        closeEdit();
+        loadHist();
+        loadBal();
+      }else toast('❌ '+(r.error||'修改失敗'),'err');
+    }
+  );
+}
+
 function submitPur(){
   if(!CUR)return;
   var dt=document.getElementById('purdt').value;
@@ -780,17 +879,20 @@ function loadHist(){
       '<colgroup>'+
         '<col style="min-width:80px"><col style="min-width:110px"><col style="min-width:70px">'+
         '<col style="min-width:180px"><col style="min-width:80px"><col style="min-width:100px">'+
-        '<col style="min-width:90px"><col style="min-width:90px"><col style="min-width:80px">'+
+        '<col style="min-width:90px"><col style="min-width:90px"><col style="min-width:80px"><col style="min-width:60px">'+
         '</colgroup>'+
-        '<thead><tr><th>次數</th><th>日期</th><th>時間</th><th>針劑類型</th><th>劑量</th><th>施打院區</th><th>醫師</th><th>護理師</th><th>備註</th></tr></thead>'+
+        '<thead><tr><th>次數</th><th>日期</th><th>時間</th><th>針劑類型</th><th>劑量</th><th>施打院區</th><th>醫師</th><th>護理師</th><th>備註</th><th></th></tr></thead>'+
       '<tbody>'+recs.map(function(r){
+        var editedInfo = r.editedBy ? '<div class="edited-tag">修改：'+r.editedBy+'</div>' : '';
+        var safeId = (r.id||'').replace(/'/g,"\'");
         return '<tr><td><span class="chip ck">第 '+r.seq+' 次</span></td>'+
           '<td><b>'+r.date+'</b></td><td>'+r.time+'</td>'+
           '<td><span class="chip cp">'+r.injType+'</span></td>'+
           '<td><span class="chip ct">'+r.dose+' mg</span></td>'+
           '<td><span class="chip cg">'+r.clinic+'</span></td>'+
           '<td>'+r.doctor+'</td><td>'+r.nurse+'</td>'+
-          '<td style="color:var(--ink3)">'+(r.note||'—')+'</td></tr>';
+          '<td style="color:var(--ink3)">'+(r.note||'—')+editedInfo+'</td>'+
+          '<td><button onclick="openEdit('+JSON.stringify(r)+')" style="border:none;background:none;cursor:pointer;color:var(--teal);font-size:13px;padding:4px 8px;border-radius:6px;white-space:nowrap;" onmouseover="this.style.background='var(--tl)'" onmouseout="this.style.background='none'">✏️ 修改</button></td></tr>';
       }).join('')+'</tbody></table></div>';
   });
 }
