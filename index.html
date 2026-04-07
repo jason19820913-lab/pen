@@ -892,7 +892,7 @@ function loadHist(){
           '<td><span class="chip cg">'+r.clinic+'</span></td>'+
           '<td>'+r.doctor+'</td><td>'+r.nurse+'</td>'+
           '<td style="color:var(--ink3)">'+(r.note||'—')+editedInfo+'</td>'+
-          '<td><button onclick="openEdit('+JSON.stringify(r)+')" style="border:none;background:none;cursor:pointer;color:var(--teal);font-size:13px;padding:4px 8px;border-radius:6px;white-space:nowrap;" onmouseover="this.style.background='var(--tl)'" onmouseout="this.style.background='none'">✏️ 修改</button></td></tr>';
+          '<td><button onclick="openEdit('+JSON.stringify(r)+')" style="border:none;background:none;cursor:pointer;color:var(--teal);font-size:13px;padding:4px 8px;border-radius:6px;white-space:nowrap;">✏️ 修改</button></td></tr>';
       }).join('')+'</tbody></table></div>';
   });
 }
