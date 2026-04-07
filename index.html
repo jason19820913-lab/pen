@@ -738,7 +738,9 @@ function autoFillSpec(){
 // ── 修改施打記錄 ──
 var EDIT_REC = null;
 
-function openEdit(r){
+function openEdit(idx){
+  var r = _histRecs[idx];
+  if(!r){toast('找不到記錄','err');return;}
   EDIT_REC = r;
   document.getElementById('e-seq').value  = r.seq;
   document.getElementById('e-cl').value   = r.clinic;
@@ -869,8 +871,11 @@ function submitInj(){
 }
 
 // ── 施打歷史 ──
+var _histRecs = [];
+
 function loadHist(){
   var body=document.getElementById('histbody');
+  _histRecs = [];
   body.innerHTML='<div class="loader"><div class="sp"></div>載入中…</div>';
   get({action:'getHistory',chartNo:CUR.chartNo,clinic:CUR.clinic},function(recs){
     document.getElementById('histct').textContent=(recs.length||0)+' 筆';
@@ -884,7 +889,8 @@ function loadHist(){
         '<thead><tr><th>次數</th><th>日期</th><th>時間</th><th>針劑類型</th><th>劑量</th><th>施打院區</th><th>醫師</th><th>護理師</th><th>備註</th><th></th></tr></thead>'+
       '<tbody>'+recs.map(function(r){
         var editedInfo = r.editedBy ? '<div class="edited-tag">修改：'+r.editedBy+'</div>' : '';
-        var safeId = (r.id||'').replace(/'/g,"\'");
+        var idx = _histRecs.length;
+        _histRecs.push(r);
         return '<tr><td><span class="chip ck">第 '+r.seq+' 次</span></td>'+
           '<td><b>'+r.date+'</b></td><td>'+r.time+'</td>'+
           '<td><span class="chip cp">'+r.injType+'</span></td>'+
@@ -892,7 +898,7 @@ function loadHist(){
           '<td><span class="chip cg">'+r.clinic+'</span></td>'+
           '<td>'+r.doctor+'</td><td>'+r.nurse+'</td>'+
           '<td style="color:var(--ink3)">'+(r.note||'—')+editedInfo+'</td>'+
-          '<td><button onclick="openEdit('+JSON.stringify(r)+')" style="border:none;background:none;cursor:pointer;color:var(--teal);font-size:13px;padding:4px 8px;border-radius:6px;white-space:nowrap;">✏️ 修改</button></td></tr>';
+          '<td><button onclick="openEdit('+idx+')" style="border:1.5px solid var(--teal);background:var(--tl);cursor:pointer;color:var(--td);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;white-space:nowrap;font-family:inherit;">✏️ 修改</button></td></tr>';
       }).join('')+'</tbody></table></div>';
   });
 }
