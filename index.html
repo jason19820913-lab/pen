@@ -441,7 +441,7 @@ tbody tr:hover td{background:var(--tl);}
 <div id="toast" class="toast"></div>
 
 <script>
-var API='https://script.google.com/macros/s/AKfycbwRy8uL0el0OEJaDF_H-bPJrGfU-aAI6FmIhJ5t7R_WcWO8RgtVk58idn20WGyCE7EZ/exec';
+var API='https://script.google.com/macros/s/AKfycbyqk2dApPuVgSp1LyQk32dnDYU_nZsaZuB4z_ywgBB5K1vhFlGWy_bGH-kaqsAGPcKI/exec';
 var CUR=null;
 
 function get(p,cb){
@@ -800,6 +800,7 @@ function submitEdit(){
   if(!v.seq||!v.cl||!v.tp||!v.dt||!v.tm||!v.mg||!v.dr||!v.nr){
     toast('請填寫所有必填欄位','warn');return;
   }
+  console.log('EDIT_REC.id =', EDIT_REC.id, '| type:', typeof EDIT_REC.id);
   get({action:'updateInjection', recId:EDIT_REC.id,
        seq:parseInt(v.seq), clinic:v.cl, injType:v.tp,
        date:v.dt, time:v.tm, dose:parseFloat(v.mg),
