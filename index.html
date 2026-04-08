@@ -417,6 +417,27 @@ tbody tr:hover td{background:var(--tl);}
   </div>
 </div>
 
+<!-- ══ 修改購買記錄 Modal ══ -->
+<div id="edit-pur-bg" class="edit-modal-bg" onclick="if(event.target===this)closeEditPur()">
+  <div class="edit-modal">
+    <h3>✏️ 修改購買記錄</h3>
+    <div class="fg3">
+      <div class="field"><label>購買日期<span class="req">*</span></label>
+        <input id="ep-dt" type="date"></div>
+      <div class="field"><label>針劑類型<span class="req">*</span></label>
+        <select id="ep-tp"><option value="">— 選擇 —</option></select></div>
+      <div class="field"><label>可施打劑量 (mg)<span class="req">*</span></label>
+        <input id="ep-mg" type="number" min="0.1" step="0.1"></div>
+      <div class="field span2"><label>備註</label>
+        <input id="ep-note" type="text"></div>
+    </div>
+    <div class="edit-footer">
+      <button class="btn btn-t" onclick="submitEditPur()">✓ 儲存修改</button>
+      <button class="btn btn-g" onclick="closeEditPur()">取消</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script>
@@ -471,6 +492,7 @@ window.onload=function(){
     fill('injnr',d.nurses,'— 選擇護理師 —');
     ['injtp','purtp'].forEach(function(id){fill(id,d.injTypes,'— 選擇針劑類型 —');});
     fill('e-cl',d.clinics,'— 選擇 —');
+    fill('ep-tp',d.injTypes,'— 選擇 —');
     fill('e-tp',d.injTypes,'— 選擇 —');
     fill('e-dr',d.doctors,'— 選擇 —');
     fill('e-nr',d.nurses,'— 選擇 —');
@@ -706,13 +728,15 @@ function loadBal(){
     document.getElementById('purct').textContent=hist.length+' 筆';
     var pb=document.getElementById('purbody');
     if(!hist.length){pb.innerHTML='<div class="empty">尚無購買記錄</div>';return;}
+    _purRecs = hist;
     pb.innerHTML='<div class="tscroll"><table>'+
-      '<thead><tr><th>購買日期</th><th>針劑類型</th><th>可施打劑量</th><th>備註</th></tr></thead>'+
-      '<tbody>'+hist.map(function(h){
+      '<thead><tr><th>購買日期</th><th>針劑類型</th><th>可施打劑量</th><th>備註</th><th></th></tr></thead>'+
+      '<tbody>'+hist.map(function(h,i){
         return '<tr><td><b>'+h.date+'</b></td>'+
           '<td><span class="chip cp">'+h.injType+'</span></td>'+
           '<td><span class="chip ct">'+h.totalMg+' mg</span></td>'+
-          '<td style="color:var(--ink3)">'+(h.note||'—')+'</td></tr>';
+          '<td style="color:var(--ink3)">'+(h.note||'—')+'</td>'+
+          '<td><button onclick="openEditPur('+i+')" style="border:1.5px solid var(--purple);background:var(--pl);cursor:pointer;color:var(--purple);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;white-space:nowrap;font-family:inherit;">✏️ 修改</button></td></tr>';
       }).join('')+'</tbody></table></div>';
     calcRem();
   });
@@ -761,6 +785,7 @@ function closeEdit(){
 
 function submitEdit(){
   if(!EDIT_REC){toast('找不到記錄','err');return;}
+  if(!EDIT_REC.id){toast('記錄缺少 ID，無法修改','err');return;}
   var v={
     seq:   document.getElementById('e-seq').value,
     cl:    document.getElementById('e-cl').value,
@@ -786,6 +811,43 @@ function submitEdit(){
         closeEdit();
         loadHist();
         loadBal();
+      }else toast('❌ '+(r.error||'修改失敗：找不到記錄'),'err');
+    }
+  );
+}
+
+function openEditPur(idx){
+  var h = _purRecs[idx];
+  if(!h){toast('找不到記錄','err');return;}
+  EDIT_PUR = h;
+  document.getElementById('ep-dt').value   = h.date;
+  document.getElementById('ep-tp').value   = h.injType;
+  document.getElementById('ep-mg').value   = h.totalMg;
+  document.getElementById('ep-note').value = h.note||'';
+  document.getElementById('edit-pur-bg').classList.add('on');
+}
+
+function closeEditPur(){
+  document.getElementById('edit-pur-bg').classList.remove('on');
+  EDIT_PUR = null;
+}
+
+function submitEditPur(){
+  if(!EDIT_PUR){toast('找不到記錄','err');return;}
+  if(!EDIT_PUR.recId){toast('記錄缺少 ID，請重新查詢','err');return;}
+  var dt   = document.getElementById('ep-dt').value;
+  var tp   = document.getElementById('ep-tp').value;
+  var mg   = document.getElementById('ep-mg').value;
+  var note = document.getElementById('ep-note').value;
+  if(!dt||!tp||!mg){toast('請填寫所有必填欄位','warn');return;}
+  get({action:'updatePurchase', recId:EDIT_PUR.recId,
+       date:dt, injType:tp, totalMg:parseFloat(mg), note:note,
+       editedBy:CUR_USER||''},
+    function(r){
+      if(r.success){
+        toast('✅ 購買記錄已修改','ok');
+        closeEditPur();
+        if(CUR) loadBal();
       }else toast('❌ '+(r.error||'修改失敗'),'err');
     }
   );
@@ -872,6 +934,8 @@ function submitInj(){
 
 // ── 施打歷史 ──
 var _histRecs = [];
+var _purRecs  = [];
+var EDIT_PUR  = null;
 
 function loadHist(){
   var body=document.getElementById('histbody');
