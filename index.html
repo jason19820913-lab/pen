@@ -763,8 +763,9 @@ function autoFillSpec(){
 var EDIT_REC = null;
 
 function openEdit(idx){
+  console.log('openEdit called, idx=', idx, '_histRecs.length=', _histRecs.length, '_histRecs=', JSON.stringify(_histRecs.map(function(x){return x.id;})));
   var r = _histRecs[idx];
-  if(!r){toast('找不到記錄','err');return;}
+  if(!r){toast('_histRecs 已清空（idx='+idx+', len='+_histRecs.length+'）請重新查詢病人後再試','err');return;}
   EDIT_REC = r;
   document.getElementById('e-seq').value  = r.seq;
   document.getElementById('e-cl').value   = r.clinic;
@@ -786,6 +787,7 @@ function closeEdit(){
 function submitEdit(){
   if(!EDIT_REC){toast('找不到記錄','err');return;}
   if(!EDIT_REC.id){toast('記錄缺少 ID，無法修改','err');return;}
+  console.log('submitEdit, EDIT_REC.id=', EDIT_REC.id);
   var v={
     seq:   document.getElementById('e-seq').value,
     cl:    document.getElementById('e-cl').value,
