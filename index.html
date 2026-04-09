@@ -386,6 +386,19 @@ tbody tr:hover td{background:var(--tl);}
 
 </main>
 
+<!-- ══ 確認刪除 Modal ══ -->
+<div id="del-modal-bg" class="edit-modal-bg" onclick="if(event.target===this)closeDel()">
+  <div class="edit-modal" style="max-width:380px;text-align:center;">
+    <div style="font-size:36px;margin-bottom:12px;">🗑</div>
+    <h3 style="justify-content:center;margin-bottom:8px;">確認刪除</h3>
+    <p id="del-msg" style="font-size:13.5px;color:var(--ink2);margin-bottom:22px;line-height:1.6;"></p>
+    <div class="edit-footer">
+      <button class="btn" style="flex:1;justify-content:center;background:var(--red);color:#fff;" onclick="execDelete()">確認刪除</button>
+      <button class="btn btn-g" style="flex:1;justify-content:center;" onclick="closeDel()">取消</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ 修改施打記錄 Modal ══ -->
 <div id="edit-modal-bg" class="edit-modal-bg" onclick="if(event.target===this)closeEdit()">
   <div class="edit-modal">
@@ -736,7 +749,10 @@ function loadBal(){
           '<td><span class="chip cp">'+h.injType+'</span></td>'+
           '<td><span class="chip ct">'+h.totalMg+' mg</span></td>'+
           '<td style="color:var(--ink3)">'+(h.note||'—')+'</td>'+
-          '<td><button onclick="openEditPur('+i+')" style="border:1.5px solid var(--purple);background:var(--pl);cursor:pointer;color:var(--purple);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;white-space:nowrap;font-family:inherit;">✏️ 修改</button></td></tr>';
+          '<td style="white-space:nowrap">'+
+          '<button onclick="openEditPur('+i+')" style="border:1.5px solid var(--purple);background:var(--pl);cursor:pointer;color:var(--purple);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;font-family:inherit;margin-right:4px;">✏️ 修改</button>'+
+          '<button onclick="delPur('+i+')" style="border:1.5px solid #fecaca;background:var(--rl);cursor:pointer;color:var(--red);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;font-family:inherit;">🗑 刪除</button>'+
+          '</td></tr>';
       }).join('')+'</tbody></table></div>';
     calcRem();
   });
@@ -759,13 +775,96 @@ function autoFillSpec(){
   }
 }
 
+// ── 刪除記錄 ──
+var DEL_ACTION = null;
+var DEL_IDX    = null;
+
+function confirmDelInj(idx){
+  var r = _histRecs[idx];
+  if(!r){toast('找不到記錄','err');return;}
+  DEL_ACTION = 'inj';
+  DEL_IDX    = idx;
+  document.getElementById('del-msg').textContent =
+    '確定要刪除「第 '+r.seq+' 次」施打記錄？（'+r.date+' / '+r.injType+' / '+r.dose+' mg）
+此操作無法復原。';
+  document.getElementById('del-modal-bg').classList.add('on');
+}
+
+function confirmDelPur(idx){
+  var h = _purRecs[idx];
+  if(!h){toast('找不到記錄','err');return;}
+  DEL_ACTION = 'pur';
+  DEL_IDX    = idx;
+  document.getElementById('del-msg').textContent =
+    '確定要刪除「'+h.injType+'」購買記錄？（'+h.date+' / '+h.totalMg+' mg）
+此操作無法復原。';
+  document.getElementById('del-modal-bg').classList.add('on');
+}
+
+function closeDel(){
+  document.getElementById('del-modal-bg').classList.remove('on');
+  DEL_ACTION = null; DEL_IDX = null;
+}
+
+function execDelete(){
+  if(DEL_ACTION === 'inj'){
+    var r = _histRecs[DEL_IDX];
+    if(!r || !r.id){toast('記錄缺少 ID','err');return;}
+    get({action:'deleteInjection', recId:r.id}, function(res){
+      if(res.success){
+        toast('✅ 已刪除施打記錄','ok');
+        closeDel(); loadHist(); loadBal();
+      } else toast('❌ '+(res.error||'刪除失敗'),'err');
+    });
+  } else if(DEL_ACTION === 'pur'){
+    var h = _purRecs[DEL_IDX];
+    if(!h || !h.recId){toast('記錄缺少 ID','err');return;}
+    get({action:'deletePurchase', recId:h.recId}, function(res){
+      if(res.success){
+        toast('✅ 已刪除購買記錄','ok');
+        closeDel(); loadBal();
+      } else toast('❌ '+(res.error||'刪除失敗'),'err');
+    });
+  }
+}
+
 // ── 修改施打記錄 ──
 var EDIT_REC = null;
 
-function openEdit(idx){
-  console.log('openEdit called, idx=', idx, '_histRecs.length=', _histRecs.length, '_histRecs=', JSON.stringify(_histRecs.map(function(x){return x.id;})));
+// ── 刪除施打記錄 ──
+function delInj(idx){
   var r = _histRecs[idx];
-  if(!r){toast('_histRecs 已清空（idx='+idx+', len='+_histRecs.length+'）請重新查詢病人後再試','err');return;}
+  if(!r){toast('找不到記錄','err');return;}
+  if(!confirm('確定要刪除「第 '+r.seq+' 次　'+r.date+'　'+r.injType+'　'+r.dose+'mg」這筆施打記錄？\n\n此動作無法復原！')){return;}
+  get({action:'deleteInjection', recId:r.id},
+    function(res){
+      if(res.success){
+        toast('✅ 施打記錄已刪除','ok');
+        loadHist();
+        loadBal();
+      }else toast('❌ '+(res.error||'刪除失敗'),'err');
+    }
+  );
+}
+
+// ── 刪除購買記錄 ──
+function delPur(idx){
+  var h = _purRecs[idx];
+  if(!h){toast('找不到記錄','err');return;}
+  if(!confirm('確定要刪除「'+h.date+'　'+h.injType+'　'+h.totalMg+'mg」這筆購買記錄？\n\n此動作無法復原！')){return;}
+  get({action:'deletePurchase', recId:h.recId},
+    function(res){
+      if(res.success){
+        toast('✅ 購買記錄已刪除','ok');
+        if(CUR) loadBal();
+      }else toast('❌ '+(res.error||'刪除失敗'),'err');
+    }
+  );
+}
+
+function openEdit(idx){
+  var r = _histRecs[idx];
+  if(!r){toast('找不到記錄，請重新查詢病人後再試','err');return;}
   EDIT_REC = r;
   document.getElementById('e-seq').value  = r.seq;
   document.getElementById('e-cl').value   = r.clinic;
@@ -787,7 +886,6 @@ function closeEdit(){
 function submitEdit(){
   if(!EDIT_REC){toast('找不到記錄','err');return;}
   if(!EDIT_REC.id){toast('記錄缺少 ID，無法修改','err');return;}
-  console.log('submitEdit, EDIT_REC.id=', EDIT_REC.id);
   var v={
     seq:   document.getElementById('e-seq').value,
     cl:    document.getElementById('e-cl').value,
@@ -965,7 +1063,10 @@ function loadHist(){
           '<td><span class="chip cg">'+r.clinic+'</span></td>'+
           '<td>'+r.doctor+'</td><td>'+r.nurse+'</td>'+
           '<td style="color:var(--ink3)">'+(r.note||'—')+editedInfo+'</td>'+
-          '<td><button onclick="openEdit('+idx+')" style="border:1.5px solid var(--teal);background:var(--tl);cursor:pointer;color:var(--td);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;white-space:nowrap;font-family:inherit;">✏️ 修改</button></td></tr>';
+          '<td style="white-space:nowrap">'+
+          '<button onclick="openEdit('+idx+')" style="border:1.5px solid var(--teal);background:var(--tl);cursor:pointer;color:var(--td);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;font-family:inherit;margin-right:4px;">✏️ 修改</button>'+
+          '<button onclick="delInj('+idx+')" style="border:1.5px solid #fecaca;background:var(--rl);cursor:pointer;color:var(--red);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:6px;font-family:inherit;">🗑 刪除</button>'+
+          '</td></tr>';
       }).join('')+'</tbody></table></div>';
   });
 }
