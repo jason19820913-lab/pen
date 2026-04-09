@@ -785,8 +785,7 @@ function confirmDelInj(idx){
   DEL_ACTION = 'inj';
   DEL_IDX    = idx;
   document.getElementById('del-msg').textContent =
-    '確定要刪除「第 '+r.seq+' 次」施打記錄？（'+r.date+' / '+r.injType+' / '+r.dose+' mg）
-此操作無法復原。';
+    '確定要刪除「第 '+r.seq+' 次」施打記錄？（'+r.date+' / '+r.injType+' / '+r.dose+' mg）此操作無法復原。';
   document.getElementById('del-modal-bg').classList.add('on');
 }
 
@@ -796,8 +795,7 @@ function confirmDelPur(idx){
   DEL_ACTION = 'pur';
   DEL_IDX    = idx;
   document.getElementById('del-msg').textContent =
-    '確定要刪除「'+h.injType+'」購買記錄？（'+h.date+' / '+h.totalMg+' mg）
-此操作無法復原。';
+    '確定要刪除「'+h.injType+'」購買記錄？（'+h.date+' / '+h.totalMg+' mg）此操作無法復原。';
   document.getElementById('del-modal-bg').classList.add('on');
 }
 
