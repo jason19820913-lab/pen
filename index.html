@@ -729,9 +729,9 @@ function loadBal(){
         var cls=low||warn?'bc warn':'bc';
         var vcls=low?'danger-v':warn?'warn-v':'ok';
         cards.innerHTML+='<div class="'+cls+'"><div class="bc-tag">針劑餘量</div><div class="bc-type">'+b.injType+'</div>'+
-          '<div class="bc-rows"><span class="bk">可施打</span><span class="bv">'+b.purchased.toFixed(1)+' mg</span>'+
-          '<span class="bk">已用</span><span class="bv">'+b.used.toFixed(1)+' mg</span>'+
-          '<span class="bk">剩餘</span><span class="'+vcls+'">'+b.remaining.toFixed(1)+' mg（'+pct+'%）</span></div></div>';
+          '<div class="bc-rows"><span class="bk">可施打</span><span class="bv">'+b.purchased.toFixed(2)+' mg</span>'+
+          '<span class="bk">已用</span><span class="bv">'+b.used.toFixed(2)+' mg</span>'+
+          '<span class="bk">剩餘</span><span class="'+vcls+'">'+b.remaining.toFixed(2)+' mg（'+pct+'%）</span></div></div>';
       });
 
     }
@@ -992,7 +992,7 @@ function calcRem(){
     (d.balances||[]).forEach(function(b){if(b.injType===type)found=b;});
     if(!found){box.textContent='此針劑尚無購買記錄，請先新增購買';box.className='rem empty';return;}
     var after=found.remaining-dose;
-    box.textContent=after.toFixed(1)+' mg';
+    box.textContent=after.toFixed(2)+' mg';
     box.className='rem'+(after<0?' danger':after<=100?' warn':'');
   });
 }
