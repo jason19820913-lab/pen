@@ -171,11 +171,11 @@ tbody tr:hover td{background:var(--tl);}
     <p style="font-size:13px;color:var(--ink3);margin-bottom:28px;">請選擇您的名稱並輸入密碼</p>
 
     <div class="field" style="text-align:left;margin-bottom:14px;">
-      <label style="font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;">使用者名稱<span style="color:var(--red)">*</span></label>
-      <input id="login-user" list="login-user-list" placeholder="請選擇或輸入名稱…"
+      <label style="font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:.3px;">員工編號<span style="color:var(--red)">*</span></label>
+      <input id="login-user" type="text" placeholder="請輸入員工編號"
         autocomplete="off"
-        style="margin-top:5px;font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r8);width:100%;font-family:inherit;outline:none;background:var(--w);-webkit-appearance:none;">
-      <datalist id="login-user-list"></datalist>
+        style="margin-top:5px;font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r8);width:100%;font-family:inherit;outline:none;background:var(--w);-webkit-appearance:none;"
+        onkeydown="if(event.key==='Enter')document.getElementById('login-pw').focus()">
     </div>
 
     <div class="field" style="text-align:left;margin-bottom:20px;">
@@ -188,7 +188,7 @@ tbody tr:hover td{background:var(--tl);}
     <div id="login-err" style="display:none;background:var(--rl);border:1px solid #fecaca;border-radius:var(--r8);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:16px;text-align:left;"></div>
 
     <button class="btn btn-t btn-full" onclick="doLogin()" style="font-size:15px;padding:13px;" id="login-btn">登入系統</button>
-    <p style="font-size:12px;color:var(--ink3);margin-top:14px;">密碼預設為 1234，建議登入後按右上角的「🔑 修改密碼」重設</p>
+    <p style="font-size:12px;color:var(--ink3);margin-top:14px;">請使用員工編號登入，密碼與入口網站相同</p>
   </div>
 </div>
 
@@ -491,14 +491,7 @@ window.onload=function(){
     var dot=document.getElementById('sdot'),txt=document.getElementById('stxt');
     if(d.error){dot.className='sdot err';txt.textContent='連線失敗';toast('連線失敗','err');return;}
     // 填使用者下拉
-    // 登入用 datalist（支援打字搜尋）
-    var dl = document.getElementById('login-user-list');
-    dl.innerHTML = '';
-    (d.users||[]).forEach(function(u){
-      var opt = document.createElement('option');
-      opt.value = u;
-      dl.appendChild(opt);
-    });
+    // 登入改用員工編號，不需要 datalist
     // 填其他選單
     ['scl','npcl','injcl'].forEach(function(id){fill(id,d.clinics,'— 選擇院區 —');});
     fill('injdr',d.doctors,'— 選擇醫師 —');
@@ -526,10 +519,11 @@ function doLogin(){
   get({action:'verifyUser',name:u,password:pw},function(r){
     btn.textContent='登入系統';btn.disabled=false;
     if(r.success){
-      CUR_USER=r.name;
+      CUR_USER=r.empNo || r.name;  // 建立者記錄用員工編號
+      var displayName = r.name || r.empNo;
       document.getElementById('login-screen').style.display='none';
       document.getElementById('main-content').style.display='block';
-      document.getElementById('stxt').textContent='已連線 · '+r.name;
+      document.getElementById('stxt').textContent='已連線 · '+displayName;
       document.getElementById('chpw-btn').style.display='block';
     }else{
       errEl.textContent='❌ '+(r.error||'驗證失敗');
