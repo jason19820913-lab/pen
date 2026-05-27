@@ -480,6 +480,7 @@ function fill(id,list,ph){
 
 // ── 初始化 ──
 var CUR_USER = null;
+var CUR_NAME = null;
 var INJ_SPECS = {};
 
 
@@ -519,7 +520,8 @@ function doLogin(){
   get({action:'verifyUser',name:u,password:pw},function(r){
     btn.textContent='登入系統';btn.disabled=false;
     if(r.success){
-      CUR_USER=r.empNo || r.name;  // 建立者記錄用員工編號
+      CUR_USER = r.empNo || r.name;   // 修改密碼用員工編號
+      CUR_NAME = r.name || r.empNo;   // 建立者/修改者記錄用姓名
       var displayName = r.name || r.empNo;
       document.getElementById('login-screen').style.display='none';
       document.getElementById('main-content').style.display='block';
@@ -613,7 +615,7 @@ function addPt(){
   get({action:'addPatient',chartNo:no,name:nm,clinic:cl,
        gender:document.getElementById('npsx').value,
        birthDate:document.getElementById('npbd').value,
-       createdBy:CUR_USER||''},
+       createdBy:CUR_NAME||''},
     function(r){
       if(r.success){
         toast('✅ 病人已新增','ok');
@@ -897,7 +899,7 @@ function submitEdit(){
        seq:parseInt(v.seq), clinic:v.cl, injType:v.tp,
        date:v.dt, time:v.tm, dose:parseFloat(v.mg),
        doctor:v.dr, nurse:v.nr, note:v.note,
-       editedBy:CUR_USER||''},
+       editedBy:CUR_NAME||''},
     function(r){
       if(r.success){
         toast('✅ 修改已儲存','ok');
@@ -935,7 +937,7 @@ function submitEditPur(){
   if(!dt||!tp||!mg){toast('請填寫所有必填欄位','warn');return;}
   get({action:'updatePurchase', recId:EDIT_PUR.recId,
        date:dt, injType:tp, totalMg:parseFloat(mg), note:note,
-       editedBy:CUR_USER||''},
+       editedBy:CUR_NAME||''},
     function(r){
       if(r.success){
         toast('✅ 購買記錄已修改','ok');
@@ -954,7 +956,7 @@ function submitPur(){
   var note=document.getElementById('purnote').value;
   if(!dt||!tp||!mg){toast('請填寫購買日期、針劑類型與總量','warn');return;}
   get({action:'addPurchase',chartNo:CUR.chartNo,patientClinic:CUR.clinic,
-       date:dt,injType:tp,totalMg:parseFloat(mg),note:note,createdBy:CUR_USER||''},
+       date:dt,injType:tp,totalMg:parseFloat(mg),note:note,createdBy:CUR_NAME||''},
     function(r){
       if(r.success){
         toast('✅ 購買記錄已儲存','ok');
@@ -1011,7 +1013,7 @@ function submitInj(){
   get({action:'addInjection',chartNo:CUR.chartNo,patientClinic:CUR.clinic,
        clinic:v.cl,date:v.dt,time:v.tm,seq:parseInt(v.seq),
        injType:v.tp,dose:parseFloat(v.mg),
-       doctor:v.dr,nurse:v.nr,note:v.note,createdBy:CUR_USER||''},
+       doctor:v.dr,nurse:v.nr,note:v.note,createdBy:CUR_NAME||''},
     function(r){
       if(r.success){
         toast('✅ 施打記錄已儲存','ok');
